@@ -1,4 +1,10 @@
+import LoginModal from "../components/LoginModal"
+
 const Home = () =>{
-    return<div>Home</div>
+    return(
+        <>
+        <span>Herl</span>
+        </>
+    )
 }
 export default Home

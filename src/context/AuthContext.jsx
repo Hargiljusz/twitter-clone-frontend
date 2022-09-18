@@ -26,7 +26,7 @@ export function AuthContextProvider({children}){
     const login = async (loginValues) => {
         setLoading(true)
         try{
-            const response = await axios.post('/api/Authenticate/login',{email:loginValues.email,password:loginValues.password},{headers:{'Content-Type':'application/json'}}) 
+            const response = await axios.post('/rest/api/auth/singIn',{email:loginValues.email,password:loginValues.password},{headers:{'Content-Type':'application/json'}}) 
                 const logged_user = {
                     email: response.data.email,
                     jwt: response.data.jwt,
@@ -41,6 +41,7 @@ export function AuthContextProvider({children}){
                 setUserStatus({isLogged: true, isAdmin: checkAdminRole })
         }
         catch(err){
+            console.log(err)
             if(err.response.status === 401){
                 return "Błedne dane uwierzytelniające."
             }
@@ -56,7 +57,7 @@ export function AuthContextProvider({children}){
 
     const logout = () => {
         setLoading(true);
-        axios.get('/api/Authenticate/logout')
+        axios.delete('/rest/api/auth/logout',{headers: {"Authorization":`Bearer ${user.jwt}`}})
         .then(response => {
             localStorage.clear()
             setUserStatus({isLogged: false, isAdmin: false });
@@ -74,12 +75,12 @@ export function AuthContextProvider({children}){
         const userLogged = localStorage.getItem("userLogged");
 
         if(userLogged){
-            axios.post('/api/Authenticate/refresh')
+            axios.get('/rest/api/auth/refresh')
             .then(response => {
                 if(response.status === 200){
                     
                     const logged_user = {
-                        username: response.data.email,
+                        email: response.data.email,
                         jwt: response.data.jwt,
                         roles: response.data.roles,
                         userid: response.data.userID,

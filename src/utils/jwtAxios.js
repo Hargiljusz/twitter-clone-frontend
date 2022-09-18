@@ -2,8 +2,8 @@ import axios from "axios";
 
 const jwtAxios = axios.create()
 
-//jwtAxios.defaults.baseURL = 'https://localhost:7176/'
-//jwtAxios.defaults.headers = {"Access-Control-Allow-Origin": "*"} 
+// jwtAxios.defaults.baseURL = 'https://localhost:7069/'
+// jwtAxios.defaults.headers = {"Access-Control-Allow-Origin": "*"} 
 
 jwtAxios.interceptors.request.use(config =>{
     const {context} = config;

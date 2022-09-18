@@ -5,6 +5,8 @@ import './App.css'
 import Sidebar from "./assets/Sidebar";
 import Container from "./assets/Container";
 import Activitybar from "./assets/Activitybar";
+import routes from "./utils/routesData";
+import Profile from "./pages/Profile";
 
 function App() {
 
@@ -15,7 +17,8 @@ function App() {
         <Sidebar />
         <Container>
           <Routes>
-            <Route path="/" element={<Home />} />
+            <Route path={routes.Home} element={<Home />} />
+            <Route path={routes.Profile} element={<Profile />} />
           </Routes> 
         </Container>
         <Activitybar />
