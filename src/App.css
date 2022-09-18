@@ -1,0 +1,63 @@
+.App {
+  width: 100vw;
+  height: 100vh; 
+  display: flex;
+  flex-direction: row; 
+}
+body {
+    margin: 0;
+    padding: 0;
+}
+
+.Sidebar{
+    height: 100vh;  
+    width: 30vw; 
+    background-color: #2f4050;
+    border-right: 2px solid grey;
+}
+.MainContainer {
+    height: 100vh;  
+    width: 40vw;
+    background-color: #2f4050;
+    border-right: 2px solid grey;
+    color: whitesmoke;
+    padding: 1.5rem;
+}
+
+.ActivityContent{
+    height: 100vh;
+    width: 30vw;
+    background-color: #2f4050;
+    padding: 1.5rem;
+    color: whitesmoke;
+}
+
+.SidebarList{
+    width: 100%;
+    height: auto;
+    padding: 0;
+    padding-top: 2rem;
+    padding-left: 2rem;
+    padding-right: 2rem;
+}
+
+.SidebarList  .SidebarRow{
+    width: 100%;
+    height: 80px;
+    list-style-type: none;
+    margin: 0%;
+    display: flex;
+    flex-direction: row;
+    color:  whitesmoke;
+    justify-content: center;
+    align-items: center;
+}
+
+.SidebarRow .Icon {
+    font-size: 1.5rem;
+    flex: 30%;
+}
+.SidebarRow .Title{
+    font-size: 1.5rem;
+    flex: 70%;
+}
