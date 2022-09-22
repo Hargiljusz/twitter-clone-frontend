@@ -27,7 +27,7 @@ jwtAxios.interceptors.response.use(
         if(error.response && error.response.status === 401 && originalRequest.again){
             const {context} = originalRequest
 
-            return axios.post('/api/auth/refresh',{headers:{'Content-Type':'application/json'},withCredentials:true})
+            return axios.post('/rest/api/auth/refresh',{headers:{'Content-Type':'application/json'},withCredentials:true})
                         .then(r=>{
                             context.setJWT(r.data.jwt)
                             originalRequest.headers.Authorization ='Bearer '+r.data.jwt

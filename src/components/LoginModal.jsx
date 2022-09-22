@@ -44,7 +44,7 @@ const LoginModal = () => {
                 </li>
             </Link>
             <Modal show={showLogin} className="special_modal">
-                <Modal.Header closeButton>
+                <Modal.Header closeButton={false}>
                     <Modal.Title>Zaloguj się</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
@@ -65,18 +65,24 @@ const LoginModal = () => {
                         <Link to="/restore" style={{color: "#df9705", fontSize: 14, fontWeight: 600, marginLeft: "21%", float: 'right'}}>Zapomniałeś hasła?</Link>
                         </div> */}
                         <div>
-                        <Button  variant="secondary"  onClick={handleSubmit}>Zaloguj</Button>
+                       
+
+                        <Form.Group controlId="form.Submit">
+                            <Row style={{marginBottom: 5,width: "50%",alignContent:"right"}}>
+                                <Form.Control  type="submit" onClick={handleSubmit} value="Zaloguj"></Form.Control>
+                            </Row>
+                        </Form.Group>
                         </div>
                         
-                        <br /><br/>
+                        <br />
                         <div className="text-center">
                         </div>
                     </Form>
 
                 </Modal.Body>
-                {/* <Modal.Footer>
-                <Button  variant="secondary" onClick={handleSubmit}>Zaloguj</Button> 
-                </Modal.Footer> */}
+                <Modal.Footer>
+                <Button  variant="danger" onClick={()=>setShowLogin(prev=>!prev)}>Zamknij</Button> 
+                </Modal.Footer>
 
             </Modal>
         </>
