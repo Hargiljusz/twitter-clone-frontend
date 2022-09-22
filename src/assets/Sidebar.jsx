@@ -6,10 +6,12 @@ import { Link } from "react-router-dom"
 import { useContext } from "react"
 import AuthContext from "../context/AuthContext"
 import LoginModal from "../components/LoginModal"
+import { BackendType } from "../context/AuthContext"
+import { ButtonGroup,ToggleButton } from "react-bootstrap"
 
 const Sidebar = () => {
 
-  const {userStatus,user,logout} = useContext(AuthContext)
+  const {userStatus,user,logout,backendType,setBackendType} = useContext(AuthContext)
   
   return (
     <div className="Sidebar">
@@ -43,7 +45,28 @@ const Sidebar = () => {
         <LoginModal/>:null}
 
       </ul>
-      <div className="SidebarFotter">{userStatus.isLogged ? user.email: null}</div>
+      <div className="SidebarFotter">
+        <h6>Backend Type: {backendType}</h6> 
+
+        <ButtonGroup>
+        {Object.values(BackendType).map((backendT, idx) => (
+          <ToggleButton
+            key={idx}
+            id={`backendT-${idx}`}
+            type="radio"
+            variant={idx % 2 ? 'outline-success' : 'outline-danger'}
+            name="radio"
+            value={backendT}
+            checked={backendType === backendT}
+            onChange={(e) => setBackendType(e.currentTarget.value)}
+          >
+            {backendT}
+          </ToggleButton>
+        ))}
+      </ButtonGroup>
+
+        <span>{userStatus.isLogged ? user.email: null}</span>
+      </div>
     </div>
   )
   

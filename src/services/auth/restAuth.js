@@ -1,20 +1,19 @@
-import jwtAxios from "../../utils/jwtAxios"
 import axios from "axios"
 const prefixUrl = "/rest"
 
-singIn = (body) => {
-    return axios.post(`${prefixUrl}/api/auth/singIn`,body)
+const singIn = (body) => {
+    return axios.post(`${prefixUrl}/api/auth/singIn`,body,{headers:{'Content-Type':'application/json'}})
 }
 
-singUp = (body) => {
+const singUp = (body) => {
     return axios.post(`${prefixUrl}/api/auth/singUp`,body)
 }
 
-logout = () => {
-    return axios.delete(`${prefixUrl}/api/auth/logout`,{withCredentials: true})
+const logout = (jwt) => {
+    return axios.delete(`${prefixUrl}/api/auth/logout`,{withCredentials: true,headers:{"Authorization":`Bearer ${jwt}`}})
 }
 
-refresh = () => {
+const refresh = () => {
     return axios.get(`${prefixUrl}/api/auth/refresh`,{withCredentials: true})
 }
 

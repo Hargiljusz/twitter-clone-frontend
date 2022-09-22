@@ -61,8 +61,11 @@ const LoginModal = () => {
                                 <Form.Control type="password" placeholder="Hasło" name="password" onChange={handleInputChange} value={loginValues.password}></Form.Control>
                             </Row>
                         </Form.Group>
-                        <div>
+                        {/* <div>
                         <Link to="/restore" style={{color: "#df9705", fontSize: 14, fontWeight: 600, marginLeft: "21%", float: 'right'}}>Zapomniałeś hasła?</Link>
+                        </div> */}
+                        <div>
+                        <Button  variant="secondary"  onClick={handleSubmit}>Zaloguj</Button>
                         </div>
                         
                         <br /><br/>
@@ -71,9 +74,9 @@ const LoginModal = () => {
                     </Form>
 
                 </Modal.Body>
-                <Modal.Footer>
+                {/* <Modal.Footer>
                 <Button  variant="secondary" onClick={handleSubmit}>Zaloguj</Button> 
-                </Modal.Footer>
+                </Modal.Footer> */}
 
             </Modal>
         </>
