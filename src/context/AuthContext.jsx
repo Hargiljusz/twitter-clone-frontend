@@ -1,5 +1,8 @@
 import axios from "axios";
 import { createContext, useState, useEffect, useMemo,React } from "react";
+import {default as RestAPI} from "../services/auth/restAuth"
+import {default as GraphQLAPI } from "../services/auth/graphqlAuth"
+import useLocalStorage from "../hooks/localStorageHook";
 
 const BackendType = {
     RestAPI : "RestAPI",
@@ -16,7 +19,7 @@ export function AuthContextProvider({children}){
     })
     const [loadingInitial,setLoadingInitial] = useState(true);
     const [loading, setLoading] = useState(false);
-    const [backendType,setBackendType] = useState(BackendType.RestAPI);
+    const [backendType,setBackendType] = useLocalStorage("BackendType",BackendType.RestAPI);
 
     //On every mount
     useEffect(() => {
@@ -24,17 +27,10 @@ export function AuthContextProvider({children}){
     }, [])
 
     const login = async (loginValues) => {
+        
         setLoading(true)
         try{
-            const response = await axios.post('/rest/api/auth/singIn',{email:loginValues.email,password:loginValues.password},{headers:{'Content-Type':'application/json'}}) 
-                const logged_user = {
-                    email: response.data.email,
-                    jwt: response.data.jwt,
-                    roles: response.data.roles,
-                    userid: response.data.userID,
-                    creationDate: response.data.creationDate
-                };
-        
+                const logged_user =  await _loginResolver(backendType,{email:loginValues.email,password:loginValues.password},RestAPI.singIn,GraphQLAPI.singIn)
                 setUser(logged_user);
                 localStorage.setItem("userLogged",true);
                 let checkAdminRole = logged_user.roles.includes('Admin');
@@ -55,44 +51,36 @@ export function AuthContextProvider({children}){
         }
     }
 
-    const logout = () => {
+    const logout = async () => {
         setLoading(true);
-        axios.delete('/rest/api/auth/logout',{headers: {"Authorization":`Bearer ${user.jwt}`}})
-        .then(response => {
-            localStorage.clear()
-            setUserStatus({isLogged: false, isAdmin: false });
-            setUser({});
-        })
-        .catch(err => {console.log(err)})
-        .finally(()=>setLoading(false))
+        try{
+           await _logoutResolver(backendType,user.jwt,RestAPI.logout,GraphQLAPI.logout)
+           localStorage.clear()
+           setUserStatus({isLogged: false, isAdmin: false });
+           setUser({});
+        }
+        catch(err){
+            console.log(err)
+        }finally{
+            setLoading(false)
+        }
+        
     }
 
     const setJWT = (newJwt)=>{
         setUser(prevState=> ({...prevState,jwt:newJwt}))
     }
 
-    const _getUserByRefreshTokenFromCookie = () => {
+    const _getUserByRefreshTokenFromCookie =  async () => {
         const userLogged = localStorage.getItem("userLogged");
 
         if(userLogged){
-            axios.get('/rest/api/auth/refresh')
-            .then(response => {
-                if(response.status === 200){
-                    
-                    const logged_user = {
-                        email: response.data.email,
-                        jwt: response.data.jwt,
-                        roles: response.data.roles,
-                        userid: response.data.userID,
-                        creationDate: response.data.creationDate
-                    };
-
-                    setUser(logged_user);
-                    let checkAdminRole = logged_user.roles.includes('Admin');
-                    setUserStatus({isLogged: true, isAdmin: checkAdminRole })
-                }
-            })
-            .catch(err => {
+            try{
+                const logged_user = await _refreshResolver(backendType,RestAPI.refresh,GraphQLAPI.refresh)
+                setUser(logged_user);
+                let checkAdminRole = logged_user.roles.includes('Admin');
+                setUserStatus({isLogged: true, isAdmin: checkAdminRole })
+            }catch(err){
                 console.log(err);
                 if(err.response.status === 500){
                     console.log("TODO")
@@ -100,11 +88,13 @@ export function AuthContextProvider({children}){
                 if(err.response.status === 401){
                     logout()
                 }
-            })
-            .finally(() => setLoadingInitial(false));
+            }finally{
+                setLoadingInitial(false)
+            }
         }else{
             setLoadingInitial(false)
         }
+        
     }
 
     const memoedValues = useMemo(()=>({
@@ -117,7 +107,7 @@ export function AuthContextProvider({children}){
         loading,
         backendType,
         setBackendType
-    }),[user,userStatus,loading])
+    }),[user,userStatus,loading,backendType])
 
     return(
         <AuthContext.Provider value={memoedValues}>
@@ -130,3 +120,57 @@ export {
 }
 export default AuthContext;
 
+const _loginResolver = async (backendType,body,RestLoginCallback,GraphQLLoginCallback) =>{ 
+    if(backendType === BackendType.RestAPI){
+        const response = await RestLoginCallback(body)
+        const logged_user = {
+            email: response.data.email,
+            jwt: response.data.jwt,
+            roles: response.data.roles,
+            userid: response.data.userId,
+            creationDate: response.data.creationTime
+        };
+        return logged_user
+    }
+    const {login} = await GraphQLLoginCallback(body.email,body.password);
+    const logged_user = {
+        email: login.email,
+        jwt: login.jWT,
+        roles: login.roles,
+        userid: login.userId,
+        creationDate: login.creationTime
+    };
+    return logged_user
+}
+
+const _logoutResolver = async (backendType,jwt,RestLogoutCallback,GraphQLLogoutCallback) =>{
+    if(backendType === BackendType.RestAPI){
+        const response = await RestLogoutCallback(jwt)
+        return true
+    }
+    const response = await GraphQLLogoutCallback();
+    return true;
+}
+
+const _refreshResolver = async(backendType,RestRefreshCallback,GraphQLRefreshCallback) =>{
+    if(backendType === BackendType.RestAPI){
+        const response = await RestRefreshCallback()
+        const logged_user = {
+            email: response.data.email,
+            jwt: response.data.jwt,
+            roles: response.data.roles,
+            userid: response.data.userId,
+            creationDate: response.data.creationDate
+        };
+        return logged_user;
+    }
+    const {refreshToken} = await GraphQLRefreshCallback();
+    const logged_user = {
+        email: refreshToken.email,
+        jwt: refreshToken.jWT,
+        roles: refreshToken.roles,
+        userid: refreshToken.userId,
+        creationDate: refreshToken.creationTime
+    }; 
+    return logged_user;
+}
