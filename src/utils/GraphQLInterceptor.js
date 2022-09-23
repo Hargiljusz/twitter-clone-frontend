@@ -1,13 +1,18 @@
-import graphQLClient from "../utils/graphQLClient";
+import graphQLClient from "./graphQLClient";
 import { useContext } from "react";
-import AuthContext,{BackendType} from "../context/AuthContext"
+import AuthContext from "../context/AuthContext"
 import api from "../services/auth/graphqlAuth"
 
-export default async function useAuthResponseInterceptorGraphQL(graphqlRequest){
+export default async function useGraphQlInterceptor(graphqlRequestCallback){
     const context = useContext(AuthContext)
 
-    const result = await graphqlRequest()
+    //request interceptor
+    graphQLClient.setHeader('Authorization', `Bearer ${context.user.jwt}`)
+    
 
+    const result = await graphqlRequestCallback(graphQLClient)
+
+    //response interceptor
     if(!Object.hasOwn(result,"errors")){
         return result
     }
@@ -17,7 +22,7 @@ export default async function useAuthResponseInterceptorGraphQL(graphqlRequest){
             const {refreshToken} = await api.refresh();
             context.setJWT(refreshToken.jWT)
             graphQLClient.setHeader('Authorization', `Bearer ${context.user.jwt}`)
-            const newResult = await graphqlRequest()
+            const newResult = await graphqlRequestCallback(graphQLClient)
             return newResult
         }catch(err){
             context.logout()
