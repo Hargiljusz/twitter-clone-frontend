@@ -12,7 +12,7 @@ const getTagByName=(name)=>{
         }
       }
     `
-    request(`${prefixUrl}/graphql`,query)
+   return request(`${prefixUrl}/graphql`,query)
 }
 
 const getTagById=(id)=>{
