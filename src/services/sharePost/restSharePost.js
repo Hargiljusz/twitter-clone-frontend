@@ -30,7 +30,7 @@ const getNumberOfShares = (postId) =>{
 }
 
 const getMySharedPostsAuth = (page,size,ctx) =>{
-    return jwtAxios.get(`${prefixUrl}/api/sharePost/me`,{context:ctx})
+    return jwtAxios.get(`${prefixUrl}/api/sharePost/me?pageNumber=${page}&pageSize=${size}`,{context:ctx})
 }
 
 
