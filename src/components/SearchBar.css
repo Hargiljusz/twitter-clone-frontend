@@ -26,7 +26,12 @@
   border-radius: 5px;
   padding: 0 60px 0 20px;
   font-size: 18px;
+  background-color: #d0d2d4;;
+  color: rgb(37, 37, 37);
   box-shadow: 0px 1px 5px rgba(0,0,0,0.1);
+}
+.search-input input::placeholder { 
+  color: white;
 }
 
 .search-input.active input{
@@ -36,7 +41,7 @@
 .search-input .autocom-box{
   position: absolute;
   width: 100%;
-  background-color: #fff;
+  background-color: #d0d2d4;
   padding: 0;
   opacity: 0;
   pointer-events: none;
@@ -55,7 +60,7 @@
   padding: 20px 36px;
   display: none;
   width: 100%;
-  color: black;
+  color: rgb(37, 37, 37);
   cursor: default;
   border-radius: 3px;
 }
@@ -64,6 +69,7 @@
   display: block;
 }
 .autocom-box li:hover{
-  background: #efefef;
+  background: #353535;
+  color: rgb(202, 202, 202);
 }
 

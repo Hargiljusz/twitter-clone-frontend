@@ -60,13 +60,15 @@ const SearchBar = () => {
 
 
   return (
-   <div className="wrapper">
-    <div className="search-input" ref={searachInputRef}>
-        <input type="text" placeholder="Szukaj...." value={searchInput} onChange={handleOnChange} onBlur={()=>searachInputRef.current.classList.remove("active")} onFocus={()=>searachInputRef.current.classList.add("active")}/>
+    <>
+   <div className="wrapper" >
+    <div className="search-input" ref={searachInputRef} onFocus={()=>searachInputRef.current.classList.add("active")} onBlur={()=>searachInputRef.current.classList.remove("active")}>
+        <input type="text" placeholder="Szukaj...." value={searchInput} onChange={handleOnChange}  />
         {searchInput !== "" ? <AutoComBox tagData={resultTag} userData={resultUser} searachInputRef={searachInputRef}/> : null}
     </div>
-     
+    
    </div>
+   </>
   )
 }
 
@@ -75,7 +77,7 @@ const AutoComBox = ({tagData,userData,searachInputRef}) => {
     const tags = tagData?.content.map(t=>{
         return <AutoComBoxTag key={t.name} tag={t}/>
     }) 
-    const users = userData?.content.map(u=><AutoComBoxUser key={u.email} user={u}/>) 
+    const users = userData?.content.map(u=><AutoComBoxUser key={u.id} user={u}/>) 
 
     tags || users ? searachInputRef.current.classList.add("active"):  searachInputRef.current.classList.remove("active")
 
