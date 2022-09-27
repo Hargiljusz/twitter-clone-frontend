@@ -74,7 +74,7 @@ export function AuthContextProvider({children}){
     const _getUserByRefreshTokenFromCookie =  async () => {
         const userLogged = localStorage.getItem("userLogged");
 
-        if(userLogged){
+        if(userLogged == true){
             try{
                 const logged_user = await _refreshResolver(backendType,RestAPI.refresh,GraphQLAPI.refresh)
                 setUser(logged_user);

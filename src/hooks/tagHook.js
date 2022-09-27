@@ -30,12 +30,12 @@ const useTags = ()=>{
         return GraphQLTagAPI.getTags(query)
     }
 
-    const search = (page,size,query= undefined) =>{
+    const search = (page,size,tag,resultQuery= undefined) =>{
         if(backendType === BackendType.RestAPI){
-            return RestTagAPI.searchTag(page,size)
+            return RestTagAPI.searchTag(tag,page,size)
         }
 
-        return GraphQLTagAPI.search(query)
+        return GraphQLTagAPI.search(tag,page,size,resultQuery)
     }
 
     const getPopularTags = (page,size) =>{

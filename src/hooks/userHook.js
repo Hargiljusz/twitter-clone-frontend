@@ -48,11 +48,11 @@ const usePost = ()=>{
         return result
     }
 
-    const search = (q,page = 0,size = 10,query = undefined) =>{
+    const search = (q,page = 0,size = 10,queryResult = undefined) =>{
         if(backendType ===BackendType.RestAPI){
             return RestUserAPI.search(q,page,size)
         }
-        return GraphQLUserAPI.search(query)
+        return GraphQLUserAPI.search(q,page,size,queryResult)
     }
 
     const blockAuth = async (blockUserId,mutation = undefined) =>{

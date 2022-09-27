@@ -32,7 +32,10 @@ const getTags=(query) =>{
     return request(`${prefixUrl}/graphql`,query)
 }
 
-const search=(query) =>{
+const search=(tag,page=0,size=20,resultQuery = ``) =>{
+    const query = gql`{search(q: "${tag}",page: ${page},size: ${size}) {
+        ${resultQuery}
+      }}`
     return request(`${prefixUrl}/graphql`,query)
 }
 

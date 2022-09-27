@@ -1,5 +1,5 @@
 const prefixUrl = "/graphql"
-import { request } from 'graphql-request'
+import { request,gql } from 'graphql-request'
 
 //#region RUD
 const getPageableAuth = (query,graphQLClient) =>{
@@ -23,7 +23,10 @@ const reportAuth = (mutation,graphQLClient) =>{
     return graphQLClient.request(mutation)
 } 
 
-const search = (query) => {
+const search = (q,page,size,queryResult) => {
+    const query = gql`{searchUsers(q: "${q}",page: ${page},size: ${size}) {
+        ${queryResult}
+      }}`
     return request(`${prefixUrl}/graphql`,query)
 }
 
