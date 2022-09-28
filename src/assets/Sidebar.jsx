@@ -63,7 +63,7 @@ const Sidebar = () => {
             {backendT}
           </ToggleButton>
         ))}
-      </ButtonGroup>
+        </ButtonGroup>
 
         <span>{userStatus.isLogged ? user.email: null}</span>
       </div>

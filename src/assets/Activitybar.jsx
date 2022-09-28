@@ -1,7 +1,7 @@
 import React from 'react'
 import "../App.css"
 import PopularTags from '../components/PopularTags'
-import SearchBar from '../components/SearchBar'
+import SearchBar from '../components/SearchBar/SearchBar'
 
 const Activitybar = () => {
   return (

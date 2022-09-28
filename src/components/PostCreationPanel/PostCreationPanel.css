@@ -1,0 +1,43 @@
+.custom-textarea { 
+    resize: none;
+    width: 90%;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 1.5rem;
+    border: none;
+    border-bottom: 1px solid grey;
+    background-color: #2f4050;
+    color: whitesmoke;
+    padding-bottom: .5rem;
+}
+.custom-textarea:focus{
+    outline: none;
+}
+
+.text-area-wrapper{
+    border-bottom: 1px solid grey;
+    padding-bottom: 1rem;
+}
+
+.info-wrapper{
+    padding: 10px 0;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    padding-inline: 5%;
+}
+
+
+button {
+   background-color: rgb(39, 118, 223); 
+   border: none;
+   border-radius: 10px;
+   color: whitesmoke;
+   padding: 15px 25px;
+}
+
+.custom-alert {
+    margin-top: 1rem;
+    margin-inline: 5%;
+}

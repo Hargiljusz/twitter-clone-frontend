@@ -4,9 +4,10 @@ import {default as GraphQLUserAPI } from "../services/user/graphqlUser"
 import AuthContext,{BackendType} from "../context/AuthContext"
 import useGraphQlInterceptor from "../utils/GraphQLInterceptor"
 
-const usePost = ()=>{
+const useUser = ()=>{
     const context = useContext(AuthContext)
     const {backendType} = context
+    const {sendAuth} = useGraphQlInterceptor()
 
 
     const getById = (id,query) =>{
@@ -20,7 +21,7 @@ const usePost = ()=>{
         if(backendType === BackendType.RestAPI){
             return RestUserAPI.getPageableAuth(page,size,context)
         }
-        const result = await useGraphQlInterceptor((gqlClient)=>GraphQLUserAPI.getPageableAuth(query,gqlClient))
+        const result = await sendAuth((gqlClient)=>GraphQLUserAPI.getPageableAuth(query,gqlClient))
         return result
     }
 
@@ -28,7 +29,7 @@ const usePost = ()=>{
         if(backendType === BackendType.RestAPI){
             return RestUserAPI.updateUserByIdAuth(id,post,context)
         }
-        const result = await useGraphQlInterceptor((gqlClient)=>GraphQLUserAPI.updateUserByIdAuth(mutation,gqlClient))
+        const result = await sendAuth((gqlClient)=>GraphQLUserAPI.updateUserByIdAuth(mutation,gqlClient))
         return result
     }
     
@@ -36,7 +37,7 @@ const usePost = ()=>{
         if(backendType === BackendType.RestAPI){
             return RestUserAPI.deleteUserByIdAuth(id,context)
         }
-        const result = await useGraphQlInterceptor((gqlClient)=>GraphQLUserAPI.deleteUserByIdAuth(mutation,gqlClient))
+        const result = await sendAuth((gqlClient)=>GraphQLUserAPI.deleteUserByIdAuth(mutation,gqlClient))
         return result
     }
 
@@ -44,7 +45,7 @@ const usePost = ()=>{
         if(backendType === BackendType.RestAPI){
             return RestUserAPI.reportAuth(reportUser,context)
         }
-        const result = await useGraphQlInterceptor((gqlClient)=>GraphQLUserAPI.reportAuth(mutation,gqlClient))
+        const result = await sendAuth((gqlClient)=>GraphQLUserAPI.reportAuth(mutation,gqlClient))
         return result
     }
 
@@ -59,7 +60,7 @@ const usePost = ()=>{
         if(backendType === BackendType.RestAPI){
             return RestUserAPI.blockAuth(blockUserId,context)
         }
-        const result = await useGraphQlInterceptor((gqlClient)=>GraphQLUserAPI.blockAuth(mutation,gqlClient))
+        const result = await sendAuth((gqlClient)=>GraphQLUserAPI.blockAuth(mutation,gqlClient))
         return result
     }
 
@@ -67,7 +68,7 @@ const usePost = ()=>{
         if(backendType === BackendType.RestAPI){
             return RestUserAPI.banAuth(banUser,context)
         }
-        const result = await useGraphQlInterceptor((gqlClient)=>GraphQLUserAPI.banAuth(mutation,gqlClient))
+        const result = await sendAuth((gqlClient)=>GraphQLUserAPI.banAuth(mutation,gqlClient))
         return result
     }
 
@@ -75,7 +76,7 @@ const usePost = ()=>{
         if(backendType === BackendType.RestAPI){
             return RestUserAPI.unbanAuth(userId,context)
         }
-        const result = await useGraphQlInterceptor((gqlClient)=>GraphQLUserAPI.unbanAuth(mutation,gqlClient))
+        const result = await sendAuth((gqlClient)=>GraphQLUserAPI.unbanAuth(mutation,gqlClient))
         return result
     }
 
@@ -83,7 +84,7 @@ const usePost = ()=>{
         if(backendType === BackendType.RestAPI){
             return RestUserAPI.addWarningAuth(warning,context)
         }
-        const result = await useGraphQlInterceptor((gqlClient)=>GraphQLUserAPI.addWarningAuth(mutation,gqlClient))
+        const result = await sendAuth((gqlClient)=>GraphQLUserAPI.addWarningAuth(mutation,gqlClient))
         return result
     }
     
@@ -91,7 +92,7 @@ const usePost = ()=>{
         if(backendType === BackendType.RestAPI){
             return RestUserAPI.getWarningAuth(userId,context)
         }
-        const result = await useGraphQlInterceptor((gqlClient)=>GraphQLUserAPI.getWarningAuth(mutation,gqlClient))
+        const result = await sendAuth((gqlClient)=>GraphQLUserAPI.getWarningAuth(mutation,gqlClient))
         return result
     }
 
@@ -99,7 +100,7 @@ const usePost = ()=>{
         if(backendType === BackendType.RestAPI){
             return RestUserAPI.getBlockUserListAuth(userId,page,size,context)
         }
-        const result = await useGraphQlInterceptor((gqlClient)=>GraphQLUserAPI.getBlockUserListAuth(mutation,gqlClient))
+        const result = await sendAuth((gqlClient)=>GraphQLUserAPI.getBlockUserListAuth(mutation,gqlClient))
         return result
     }
     
@@ -119,4 +120,4 @@ const usePost = ()=>{
      });
 }
 
-export default usePost
+export default useUser

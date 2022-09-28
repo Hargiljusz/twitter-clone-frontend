@@ -7,6 +7,8 @@ import useGraphQlInterceptor from "../utils/GraphQLInterceptor"
 const useTags = ()=>{
     const context = useContext(AuthContext)
     const {backendType} = context
+    const {sendAuth} = useGraphQlInterceptor()
+    
    
     const getTagByName = (name) =>{
         if(backendType ===BackendType.RestAPI){
@@ -50,7 +52,7 @@ const useTags = ()=>{
         if(backendType === BackendType.RestAPI){
             return RestTagAPI.getIgnoreTagAuth(page,size,context)
         }
-        const result = await useGraphQlInterceptor((gqlClient)=>GraphQLTagAPI.getMyIgnoreTagsAuth(query,gqlClient))
+        const result = await sendAuth((gqlClient)=>GraphQLTagAPI.getMyIgnoreTagsAuth(query,gqlClient))
         return result
     }
 
@@ -58,7 +60,7 @@ const useTags = ()=>{
         if(backendType === BackendType.RestAPI){
             return RestTagAPI.addTagAuth(tag,context)
         }
-        const result = await useGraphQlInterceptor((gqlClient)=> GraphQLTagAPI.addTagAuth(mutation,gqlClient))
+        const result = await sendAuth((gqlClient)=> GraphQLTagAPI.addTagAuth(mutation,gqlClient))
         return result
     }
 
@@ -67,7 +69,7 @@ const useTags = ()=>{
             return RestTagAPI.updateTagByIdAuth(id,tag,context)
         }
         
-        const result = await useGraphQlInterceptor((gqlClient) => GraphQLTagAPI.updateTagAuth(mutation,gqlClient))
+        const result = await sendAuth((gqlClient) => GraphQLTagAPI.updateTagAuth(mutation,gqlClient))
         return result
     }
 
@@ -76,7 +78,7 @@ const useTags = ()=>{
             return RestTagAPI.deleteTagByIdAuth(id,context)
         }
         
-        const result = await useGraphQlInterceptor((gqlClient) => GraphQLTagAPI.deleteTagByIdAuth(mutation,gqlClient))
+        const result = await sendAuth((gqlClient) => GraphQLTagAPI.deleteTagByIdAuth(mutation,gqlClient))
         return result
     }
 
@@ -85,7 +87,7 @@ const useTags = ()=>{
             return RestTagAPI.deleteTagByNameAuth(name,context)
         }
         
-        const result = await useGraphQlInterceptor((gqlClient) => GraphQLTagAPI.deleteTagByNameAuth(mutation,gqlClient))
+        const result = await sendAuth((gqlClient) => GraphQLTagAPI.deleteTagByNameAuth(mutation,gqlClient))
         return result
     }
     
@@ -94,7 +96,7 @@ const useTags = ()=>{
             return RestTagAPI.addIgnoreTagAuth(tag,context)
         }
         
-        const result = await useGraphQlInterceptor((gqlClient) => GraphQLTagAPI.ignoreTagAuth(mutation,gqlClient))
+        const result = await sendAuth((gqlClient) => GraphQLTagAPI.ignoreTagAuth(mutation,gqlClient))
         return result 
     }
 
@@ -103,7 +105,7 @@ const useTags = ()=>{
             return RestTagAPI.delteIgnoreTagAuth(tag,context)
         }
         
-        const result = await useGraphQlInterceptor((gqlClient) => GraphQLTagAPI.unignoreTagAuth(mutation,gqlClient))
+        const result = await sendAuth((gqlClient) => GraphQLTagAPI.unignoreTagAuth(mutation,gqlClient))
         return result 
     }
 

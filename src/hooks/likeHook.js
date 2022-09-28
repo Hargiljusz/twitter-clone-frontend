@@ -8,12 +8,13 @@ import useGraphQlInterceptor from "../utils/GraphQLInterceptor"
 const useLike = ()=>{
     const context = useContext(AuthContext)
     const {backendType} = context
-   
+    const {sendAuth} = useGraphQlInterceptor()
+
     const getLikeByIdAuth = async(id) =>{
         if(backendType ===BackendType.RestAPI){
             return RestLikeAPI.getByIdAuth(id,context)
         }
-        const result = await useGraphQlInterceptor((gqlClient)=>GraphQLLikeAPI.getLikeByIdAuth(query,gqlClient))
+        const result = await sendAuth((gqlClient)=>GraphQLLikeAPI.getLikeByIdAuth(query,gqlClient))
         return result
     }
 
@@ -22,7 +23,7 @@ const useLike = ()=>{
             return RestLikeAPI.getPageableAuth(page,size)
         }
 
-        const result = await useGraphQlInterceptor((gqlClient)=>GraphQLLikeAPI.getLikesAuth(query,gqlClient))
+        const result = await sendAuth((gqlClient)=>GraphQLLikeAPI.getLikesAuth(query,gqlClient))
         return result
     }
 
@@ -31,7 +32,7 @@ const useLike = ()=>{
             return RestLikeAPI.getMyLikedPostsAuth(page,size,context)
         }
 
-        const result = await useGraphQlInterceptor((gqlClient)=>GraphQLLikeAPI.getMyLikesAuth(query,gqlClient))
+        const result = await sendAuth((gqlClient)=>GraphQLLikeAPI.getMyLikesAuth(query,gqlClient))
         return result
     }
 
@@ -48,7 +49,7 @@ const useLike = ()=>{
             return RestLikeAPI.addLikeAuth(Like,context)
         }
 
-        const result = await useGraphQlInterceptor((gqlClient)=>GraphQLLikeAPI.addLikeAuth(query,gqlClient))
+        const result = await sendAuth((gqlClient)=>GraphQLLikeAPI.addLikeAuth(query,gqlClient))
         return result
     }
 
@@ -57,7 +58,7 @@ const useLike = ()=>{
             return RestLikeAPI.updateLikeByIdAuth(id,Like,context)
         }
 
-        const result = await useGraphQlInterceptor((gqlClient)=>GraphQLLikeAPI.updateLikeAuth(query,gqlClient))
+        const result = await sendAuth((gqlClient)=>GraphQLLikeAPI.updateLikeAuth(query,gqlClient))
         return result
     }
     const deleteLikeByIdAuth = async(id,query=undefined)=>{
@@ -65,7 +66,7 @@ const useLike = ()=>{
             return RestLikeAPI.deleteLikeByIdAuth(id,context)
         }
 
-        const result = await useGraphQlInterceptor((gqlClient)=>GraphQLLikeAPI.deleteLikeByIdAuth(query,gqlClient))
+        const result = await sendAuth((gqlClient)=>GraphQLLikeAPI.deleteLikeByIdAuth(query,gqlClient))
         return result
     }
 

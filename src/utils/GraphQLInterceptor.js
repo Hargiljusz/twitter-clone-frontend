@@ -3,12 +3,17 @@ import { useContext } from "react";
 import AuthContext from "../context/AuthContext"
 import api from "../services/auth/graphqlAuth"
 
-export default async function useGraphQlInterceptor(graphqlRequestCallback){
+export default function useGraphQlInterceptor(){
     const context = useContext(AuthContext)
+    const sendAuth = async(graphqlRequestCallback) => await send(context,graphqlRequestCallback)
+    return {sendAuth}
+}
 
-    //request interceptor
+
+
+const send = async (context,graphqlRequestCallback) =>{
     graphQLClient.setHeader('Authorization', `Bearer ${context.user.jwt}`)
-    
+     //request interceptor
 
     const result = await graphqlRequestCallback(graphQLClient)
 

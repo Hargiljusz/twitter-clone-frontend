@@ -1,5 +1,5 @@
 const prefixUrl = "/graphql"
-import { request } from 'graphql-request'
+import { request,gql } from 'graphql-request'
 
 //#region CRUD
 const getPageable = (query) => {
@@ -10,7 +10,12 @@ const getById = (query) => {
     return request(`${prefixUrl}/graphql`,query)
 }
 
-const addPostAuth = (mutation,graphQLClient) =>{
+const addPostAuth = ({contetnt,createByUserId,postFor},mutationResult,graphQLClient) =>{
+    const mutation = gql`
+        mutation {addPost(input: {contetnt:"${contetnt}",createByUserId:"${createByUserId}",postFor:"${postFor}"}) {
+          ${mutationResult}
+        }}
+      `
     return graphQLClient.request(mutation)
 } 
 

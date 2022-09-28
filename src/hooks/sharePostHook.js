@@ -8,12 +8,14 @@ import useGraphQlInterceptor from "../utils/GraphQLInterceptor"
 const useSharePost = ()=>{
     const context = useContext(AuthContext)
     const {backendType} = context
+    const {sendAuth} = useGraphQlInterceptor()
+    
    
     const getSharePostByIdAuth = async(id) =>{
         if(backendType ===BackendType.RestAPI){
             return RestSharePostAPI.getByIdAuth(id,context)
         }
-        const result = await useGraphQlInterceptor((gqlClient)=>GraphQLSharePostAPI.getSharePostByIdAuth(query,gqlClient))
+        const result = await sendAuth((gqlClient)=>GraphQLSharePostAPI.getSharePostByIdAuth(query,gqlClient))
         return result
     }
 
@@ -22,7 +24,7 @@ const useSharePost = ()=>{
             return RestSharePostAPI.getPageableAuth(page,size)
         }
 
-        const result = await useGraphQlInterceptor((gqlClient)=>GraphQLSharePostAPI.getSharePostsAuth(query,gqlClient))
+        const result = await sendAuth((gqlClient)=>GraphQLSharePostAPI.getSharePostsAuth(query,gqlClient))
         return result
     }
 
@@ -31,7 +33,7 @@ const useSharePost = ()=>{
             return RestSharePostAPI.getMySharedPostsAuth(page,size,context)
         }
 
-        const result = await useGraphQlInterceptor((gqlClient)=>GraphQLSharePostAPI.getMySharePostsAuth(query,gqlClient))
+        const result = await sendAuth((gqlClient)=>GraphQLSharePostAPI.getMySharePostsAuth(query,gqlClient))
         return result
     }
 
@@ -48,7 +50,7 @@ const useSharePost = ()=>{
             return RestSharePostAPI.addSharePostAuth(sharePost,context)
         }
 
-        const result = await useGraphQlInterceptor((gqlClient)=>GraphQLSharePostAPI.addSharePostAuth(query,gqlClient))
+        const result = await sendAuth((gqlClient)=>GraphQLSharePostAPI.addSharePostAuth(query,gqlClient))
         return result
     }
 
@@ -57,7 +59,7 @@ const useSharePost = ()=>{
             return RestSharePostAPI.updateSharePostByIdAuth(id,sharePost,context)
         }
 
-        const result = await useGraphQlInterceptor((gqlClient)=>GraphQLSharePostAPI.updateSharePostAuth(query,gqlClient))
+        const result = await sendAuth((gqlClient)=>GraphQLSharePostAPI.updateSharePostAuth(query,gqlClient))
         return result
     }
     const deleteSharePostByIdAuth = async(id,query=undefined)=>{
@@ -65,7 +67,7 @@ const useSharePost = ()=>{
             return RestSharePostAPI.deleteSharePostByIdAuth(id,context)
         }
 
-        const result = await useGraphQlInterceptor((gqlClient)=>GraphQLSharePostAPI.deleteSharePostByIdAuth(query,gqlClient))
+        const result = await sendAuth((gqlClient)=>GraphQLSharePostAPI.deleteSharePostByIdAuth(query,gqlClient))
         return result
     }
 

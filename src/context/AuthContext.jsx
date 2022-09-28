@@ -20,6 +20,7 @@ export function AuthContextProvider({children}){
     const [loadingInitial,setLoadingInitial] = useState(true);
     const [loading, setLoading] = useState(false);
     const [backendType,setBackendType] = useLocalStorage("BackendType",BackendType.RestAPI);
+    const [isUserLogged,setIsUserLogged] = useLocalStorage("serLogged",false)
 
     //On every mount
     useEffect(() => {
@@ -32,7 +33,7 @@ export function AuthContextProvider({children}){
         try{
                 const logged_user =  await _loginResolver(backendType,{email:loginValues.email,password:loginValues.password},RestAPI.singIn,GraphQLAPI.singIn)
                 setUser(logged_user);
-                localStorage.setItem("userLogged",true);
+                setIsUserLogged(true)
                 let checkAdminRole = logged_user.roles.includes('Admin');
                 setUserStatus({isLogged: true, isAdmin: checkAdminRole })
         }
@@ -55,7 +56,7 @@ export function AuthContextProvider({children}){
         setLoading(true);
         try{
            await _logoutResolver(backendType,user.jwt,RestAPI.logout,GraphQLAPI.logout)
-           localStorage.clear()
+           setIsUserLogged(false)
            setUserStatus({isLogged: false, isAdmin: false });
            setUser({});
         }
@@ -72,9 +73,9 @@ export function AuthContextProvider({children}){
     }
 
     const _getUserByRefreshTokenFromCookie =  async () => {
-        const userLogged = localStorage.getItem("userLogged");
+        const userLogged =isUserLogged;
 
-        if(userLogged == true){
+        if(userLogged){
             try{
                 const logged_user = await _refreshResolver(backendType,RestAPI.refresh,GraphQLAPI.refresh)
                 setUser(logged_user);
@@ -127,7 +128,7 @@ const _loginResolver = async (backendType,body,RestLoginCallback,GraphQLLoginCal
             email: response.data.email,
             jwt: response.data.jwt,
             roles: response.data.roles,
-            userid: response.data.userId,
+            userId: response.data.userId,
             creationDate: response.data.creationTime
         };
         return logged_user
@@ -137,7 +138,7 @@ const _loginResolver = async (backendType,body,RestLoginCallback,GraphQLLoginCal
         email: login.email,
         jwt: login.jWT,
         roles: login.roles,
-        userid: login.userId,
+        userId: login.userId,
         creationDate: login.creationTime
     };
     return logged_user

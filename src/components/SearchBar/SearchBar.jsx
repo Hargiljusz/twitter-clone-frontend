@@ -1,10 +1,10 @@
 import { useQuery } from "@tanstack/react-query";
-import useUser from "../hooks/userHook"
-import useTag from "../hooks/tagHook"
+import useUser from "../../hooks/userHook"
+import useTag from "../../hooks/tagHook"
 import { useState ,useEffect,useRef} from "react";
 import "./SearchBar.css"
 import { Link } from "react-router-dom";
-
+import useDebounce from "../../hooks/useDebounce"
 const SearchBar = () => {
     const {search: searchUser} = useUser()
     const {search: searchTag} = useTag()
@@ -41,7 +41,7 @@ const SearchBar = () => {
     const resultTag = dataTag?.data ?? dataTag?.search
     const resultUser = dataUser?.data ?? dataUser?.searchUsers
 
-   // const debounce = useDebounce(searchInput,250)
+   const debounce = useDebounce(searchInput,300)
     
     const handleOnChange = (event) =>{
         event.preventDefault()
@@ -53,10 +53,11 @@ const SearchBar = () => {
         if(searchInput && searchInput !== ""){
             refetchTag()
             refetchUser()
+            console.log("sended")
             // resultTag?.content.length > 0 ? console.log("tag",resultTag):null;
             // resultUser?.content.length > 0 ? console.log("user",resultUser): null;
         }
-    },[searchInput])
+    },[debounce])
 
 
   return (

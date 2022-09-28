@@ -47,7 +47,7 @@
   pointer-events: none;
   /* max-height: 280px; */
   overflow-y: auto;
-  border-radius: 0 0 10px 10px;
+  border-radius: 0 0 5px 5px;
 }
 
 .search-input.active .autocom-box{
@@ -62,7 +62,7 @@
   width: 100%;
   color: rgb(37, 37, 37);
   cursor: default;
-  border-radius: 3px;
+  border-radius: 5px;
 }
 
 .search-input.active .autocom-box li{

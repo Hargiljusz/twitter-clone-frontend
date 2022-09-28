@@ -8,7 +8,8 @@ import useGraphQlInterceptor from "../utils/GraphQLInterceptor"
 const useSharePost = ()=>{
     const context = useContext(AuthContext)
     const {backendType} = context
-   
+    const {sendAuth} = useGraphQlInterceptor()
+
     const getNumberOfFollowers = (userId) =>{
         if(backendType ===BackendType.RestAPI){
             return RestFollowAPI.getNumberOfFollowers(userId)
@@ -28,7 +29,7 @@ const useSharePost = ()=>{
             return RestFollowAPI.getFollowPropositionAuth(page,size,context)
         }
 
-        const result = await useGraphQlInterceptor((gqlClient)=>GraphQLFollowAPI.getFollowPropositionAuth(query,gqlClient))
+        const result = await sendAuth((gqlClient)=>GraphQLFollowAPI.getFollowPropositionAuth(query,gqlClient))
         return result
     }
 
@@ -37,7 +38,7 @@ const useSharePost = ()=>{
             return RestFollowAPI.getMyFollowersAuth(page,size,context)
         }
 
-        const result = await useGraphQlInterceptor((gqlClient)=>GraphQLFollowAPI.getMyFollowersAuth(query,gqlClient))
+        const result = await sendAuth((gqlClient)=>GraphQLFollowAPI.getMyFollowersAuth(query,gqlClient))
         return result
     }
 
@@ -46,7 +47,7 @@ const useSharePost = ()=>{
             return RestFollowAPI.getMyFollowingsAuth(page,size,context)
         }
 
-        const result = await useGraphQlInterceptor((gqlClient)=>GraphQLFollowAPI.getMyFollowingsAuth(query,gqlClient))
+        const result = await sendAuth((gqlClient)=>GraphQLFollowAPI.getMyFollowingsAuth(query,gqlClient))
         return result
     }
 
@@ -55,7 +56,7 @@ const useSharePost = ()=>{
             return RestFollowAPI.followAuth(followUserId,context)
         }
 
-        const result = await useGraphQlInterceptor((gqlClient)=>GraphQLFollowAPI.followAuth(query,gqlClient))
+        const result = await sendAuth((gqlClient)=>GraphQLFollowAPI.followAuth(query,gqlClient))
         return result
     }
 
@@ -64,7 +65,7 @@ const useSharePost = ()=>{
             return RestFollowAPI.unfollow(followUserId,context)
         }
 
-        const result = await useGraphQlInterceptor((gqlClient)=>GraphQLFollowAPI.unfollowAuth(query,gqlClient))
+        const result = await sendAuth((gqlClient)=>GraphQLFollowAPI.unfollowAuth(query,gqlClient))
         return result
     }
 
