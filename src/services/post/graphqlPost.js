@@ -41,7 +41,13 @@ const repostAuth = (mutation,graphQLClient) =>{
     return graphQLClient.request(mutation)
 } 
 
-const feedAuth = (query,graphQLClient) =>{
+const feedAuth = (page,size,queryResult,graphQLClient) =>{
+    const query = gql`
+    {
+        feed(size: ${size}, page: ${page}) {
+          ${queryResult}
+        }
+    }`
     return graphQLClient.request(query)
 } 
 

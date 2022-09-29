@@ -19,8 +19,8 @@ export function AuthContextProvider({children}){
     })
     const [loadingInitial,setLoadingInitial] = useState(true);
     const [loading, setLoading] = useState(false);
-    const [backendType,setBackendType] = useLocalStorage("BackendType",BackendType.RestAPI);
-    const [isUserLogged,setIsUserLogged] = useLocalStorage("serLogged",false)
+    const [backendType,setBackendType] = useLocalStorage("backendType",BackendType.RestAPI);
+    const [isUserLogged,setIsUserLogged] = useLocalStorage("userLogged",false)
 
     //On every mount
     useEffect(() => {
@@ -160,8 +160,8 @@ const _refreshResolver = async(backendType,RestRefreshCallback,GraphQLRefreshCal
             email: response.data.email,
             jwt: response.data.jwt,
             roles: response.data.roles,
-            userid: response.data.userId,
-            creationDate: response.data.creationDate
+            userId: response.data.userId,
+            creationDate: response.data.creationTime
         };
         return logged_user;
     }

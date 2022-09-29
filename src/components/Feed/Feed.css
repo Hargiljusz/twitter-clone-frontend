@@ -1,0 +1,25 @@
+.custom-post{
+  color: whitesmoke;
+  padding: 1.5rem 1rem 1rem 1rem;
+}
+.fotter-items {
+  padding: .5rem .25rem .5rem .25rem;
+  width: 25%;
+  display: flex;
+  justify-content: space-between;
+}
+
+ .like-icon {
+  color:  whitesmoke;
+  font-size: 1.5rem;
+   border: 1px;
+   border-radius: 5px;
+}
+
+ .like-icon:hover {
+  color: blue;
+}
+
+ .active {
+  color: orchid;
+}

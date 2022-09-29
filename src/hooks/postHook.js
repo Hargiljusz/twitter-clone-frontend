@@ -73,11 +73,11 @@ const usePost = ()=>{
         return result
     }
 
-    const feedAuth = async (page = 0,size = 10,query= undefined) =>{
+    const feedAuth = async (page = 0,size = 10,queryResult = "") =>{
         if(backendType === BackendType.RestAPI){
             return RestPostAPI.feedAuth(page,size,context)
         }
-        const result = await sendAuth((gqlClient)=>GraphQLPostAPI.feedAuth(query,gqlClient))
+        const result = await sendAuth((gqlClient)=>GraphQLPostAPI.feedAuth(page,size,queryResult,gqlClient))
         return result
     }
 

@@ -29,10 +29,10 @@
 }
 
 
-button {
+.custom-button {
    background-color: rgb(39, 118, 223); 
-   border: none;
-   border-radius: 10px;
+   border: 1px;
+   border-radius: 5px;
    color: whitesmoke;
    padding: 15px 25px;
 }

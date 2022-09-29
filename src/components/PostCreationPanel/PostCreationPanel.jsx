@@ -5,12 +5,11 @@ import AuthContext from '../../context/AuthContext'
 import { Alert } from 'react-bootstrap'
 import "./PostCreationPanel.css"
 
-const PostCreationPanel = () => {
+const PostCreationPanel = ({refreshCallback}) => {
     const {addPostAuth} = usePost();
     const textAreRef = useRef(null)
     const maxCharacterNumber = 280
     const [postContetnt,setPostContetnt] = useState("")
-    const [contentCharacterNumber,setContentCharacterNumber] = useState(0)
     const [showAlert,setShowAlert] = useState(false)
     const {user} = useContext(AuthContext)
 
@@ -39,13 +38,12 @@ const PostCreationPanel = () => {
     
     const handleOnChange = (e)=>{
         e.preventDefault()
-        const content = event.target.value
-        setContentCharacterNumber(content.length)
-        if(contentCharacterNumber +1 > maxCharacterNumber){
+        const content = e.target.value
+        if(content.length > maxCharacterNumber){
             setShowAlert(true)
         }
 
-        if(showAlert &&  (contentCharacterNumber -1<= maxCharacterNumber)){
+        if(showAlert &&  (content.length <= maxCharacterNumber)){
             setShowAlert(false)
         }
         setPostContetnt(content)
@@ -53,8 +51,8 @@ const PostCreationPanel = () => {
     const handleSend = () =>{
         postMutation.mutate(postContetnt)
         setPostContetnt("")
-        setContentCharacterNumber(0)
         setShowAlert(false)
+        refreshCallback(true)
     }
 
   return (
@@ -62,8 +60,8 @@ const PostCreationPanel = () => {
             <textarea cols="60" rows="5" className='custom-textarea' ref={textAreRef} onChange={handleOnChange} value={postContetnt}/>
             <Alert variant='danger' show={showAlert} className='custom-alert'>Przekroczono Maksymalną ilość znaków</Alert>
             <div className='info-wrapper'>
-                <span>{contentCharacterNumber}/{maxCharacterNumber}</span>
-                <button onClick={handleSend}>Postuj</button>
+                <span>{postContetnt.length}/{maxCharacterNumber}</span>
+                <button className='custom-button' onClick={handleSend}>Postuj</button>
             </div>
         </div>
   )
