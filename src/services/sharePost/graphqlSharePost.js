@@ -39,7 +39,9 @@ const deleteSharePostByIdAuth = (mutation,graphQLClient) =>{
     return graphQLClient.request(mutation)
 }
 
-
+const deleteSharePostByUserIdAndPostIdAuth = (queryResult,gqlClient) =>{
+    throw new Error("Not Implemented")
+}
 //#endregion
 
 const api = Object.freeze({
@@ -49,6 +51,7 @@ const api = Object.freeze({
     addSharePostAuth,
     updateSharePostAuth,
     deleteSharePostByIdAuth,
-    numberOfShares
+    numberOfShares,
+    deleteSharePostByUserIdAndPostIdAuth
  });
  export default api

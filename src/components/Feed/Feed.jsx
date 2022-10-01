@@ -1,69 +1,85 @@
-import { useQuery } from '@tanstack/react-query'
+import { useInfiniteQuery } from '@tanstack/react-query'
 import usePost from '../../hooks/postHook'
-import { useState } from 'react'
-import { Card } from 'react-bootstrap'
+import React, {useEffect, Fragment } from 'react'
+import { useInView } from 'react-intersection-observer';
+import { Alert } from 'react-bootstrap'
+import { Link } from 'react-router-dom'
+import LoadSpinner from "../../assets/LoadSpinner/LoadSpinner"
+import Post from './Post';
 import "./Feed.css"
-import {BiLike,BiShare} from "react-icons/bi"
 
-const Feed = ({refresh}) => {
-  const {feedAuth} = usePost()
-  const [page,setPage] = useState(0)
+const Feed = ({ refresh, refreshCallback }) => {
+    const { feedAuth } = usePost()
+    const { ref, inView } = useInView()
 
-  const {
-    isLoading,
-    isFetching,
-    isSuccess,
-    isError,
-    error,
-    data,
-    isPreviousData,
-  } = useQuery(['feed', page], () => feedAuth(page,10,`
-                content {
-                    id
-                }`),
-                { enabled : true,keepPreviousData:true })
+    const {
+        isLoading,
+        isFetching,
+        isSuccess,
+        refetch,
+        isError,
+        error,
+        data,
+        hasNextPage,
+        isFetchingNextPage,
+        fetchNextPage
+    } = useInfiniteQuery(['feed'], ({ pageParam = 0 }) => feedAuth(pageParam, 10, `
+                    content {
+                        id,
+                        createByUser,
+                        createdAt,
+                        isLiked,
+                        isShared,
+                        content
+                    }`),
+        {
+            enabled: true,
+            refetchOnWindowFocus: false,
+            getNextPageParam: (lastPage, allPage) => {
+                if (lastPage.data.pageNumber + 1 === lastPage.data.totalPageCount) {
+                    return undefined
+                }
+                return allPage.length
+            }
+        }
+    )
 
-    let feed = []            
 
-    if(isSuccess){
-        feed = data?.data ?? data?.feed
-    }
-    if(isLoading){
-        return <div>Loading ....</div>
-    }else{
+
+    useEffect(() => {
+        if (inView && hasNextPage) {
+            fetchNextPage()
+        }
+    }, [inView])
+
+
+    if (isLoading) {
+        return <LoadSpinner className={`spinner-position`} />
+    } else {
         return (
             <>
-               {feed.content.map((p,idx)=><Post key={idx} post={p} />)}
+                <Alert show={refresh} className='custom-info-wrapper'>
+                    <div className='info-alert'>Nowe Posty</div>
+                    <Link className='info-alert-link' onClick={() => {
+                        refreshCallback(prev => !prev)
+                        refetch()
+                    }}>Załaduj</Link>
+                </Alert>
+                {data?.pages.map((group, idx) => {
+                    return (
+                        <Fragment key={idx}>
+                            {group?.data?.content.map((p, i) => <Post key={i} post={p} />)}
+                            {isFetchingNextPage ? <LoadSpinner className={`spinner-position`} /> : null}
+                        </Fragment>
+                    )
+                })}
+                <div style={{ visibility: "hidden" }} ref={ref}>Load More</div>
             </>
-          )
+        )
     }
-    
+
 }
 
-export const Post = ({post}) => {
-  return (
-    <>
-        <Card className='custom-post' style={{backgroundColor: "#2f4050", border:"none", borderBottom: "1px solid grey", borderRadius: "0px"}}>
-            <Card.Header style={{padding:"0px 0px 10px 0px", fontSize:".75rem"}}>
-                {post.id}
-            </Card.Header>
-            <Card.Text>
-                {post.content}
-            </Card.Text>
-            <footer style={{fontSize:".75rem", decoration: "none", display:"flex", justifyContent:"space-between",marginTop:".25rem"}} >
-                <div className='fotter-items'>
-                    <BiLike className='like-icon active' onClick={e=>console.log(e)}></BiLike>
-                    <span>{post.likeNumber}</span>
-                </div>
-                <div className='fotter-items'>
-                    <BiShare className='like-icon'></BiShare>
-                    <span> {post.shareNumber}</span>
-                </div>
-            </footer>
-        </Card>
-    </>
-  )
-}
 
 
 export default Feed

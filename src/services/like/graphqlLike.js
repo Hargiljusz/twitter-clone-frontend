@@ -39,6 +39,9 @@ const deleteLikeByIdAuth = (mutation,graphQLClient) =>{
     return graphQLClient.request(mutation)
 }
 
+const deleteLikeByUserIdAndPostIdAuth = (queryResult,gqlClient) => {
+    throw new Error("Not Implemented")
+}
 
 //#endregion
 
@@ -49,6 +52,7 @@ const api = Object.freeze({
     getMyLikesAuth,
     addLikeAuth,
     updateLikeAuth,
-    deleteLikeByIdAuth
+    deleteLikeByIdAuth,
+    deleteLikeByUserIdAndPostIdAuth
  });
  export default api

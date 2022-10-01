@@ -12,7 +12,7 @@ const Home = () =>{
             {userStatus.isLogged ? 
             <>
                 <PostCreationPanel refreshCallback={setRefresh}/>
-                <Feed refresh={refresh}/>
+                <Feed refresh={refresh} refreshCallback={setRefresh}/>
             </>
             : null}
         </>

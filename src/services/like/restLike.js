@@ -19,7 +19,7 @@ const updateLikeByIdAuth = (id,like,ctx) =>{
     return jwtAxios.put(`${prefixUrl}/api/like/${id}`,like,{context: ctx})
 } 
 
-const deleteLikeByIdAuth = (id,ctx) => {
+const deleteLikeByIdAuth = (id,) => {
     return jwtAxios.delete(`${prefixUrl}/api/like/${id}`,{context: ctx})
 }
 
@@ -32,6 +32,9 @@ const getNumberOfLikes = (postId) =>{
 const getMyLikedPostsAuth = (page,size,ctx) =>{
     return jwtAxios.get(`${prefixUrl}/api/like/me?pageNumber=${page}&pageSize=${size}`,{context:ctx})
 }
+const deleteLikeByUserIdAndPostIdAuth = (like = {userId :"", postFor: ""},ctx) =>{
+    return jwtAxios.delete(`${prefixUrl}/api/like/user?userId=${like.userId}&postId=${like.postFor}`,{context: ctx})
+}
 
 
 
@@ -42,7 +45,8 @@ const api = Object.freeze({
     updateLikeByIdAuth,
     deleteLikeByIdAuth,
     getNumberOfLikes,
-    getMyLikedPostsAuth
+    getMyLikedPostsAuth,
+    deleteLikeByUserIdAndPostIdAuth
  });
 
 export default api

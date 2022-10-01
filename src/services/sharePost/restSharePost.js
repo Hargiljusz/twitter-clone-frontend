@@ -34,6 +34,13 @@ const getMySharedPostsAuth = (page,size,ctx) =>{
 }
 
 
+const deleteSharePostByUserIdAndPostIdAuth = (sharePost = {
+    postFor: "postId",
+    sharedByUserId: "userId"
+  },ctx) =>{
+    return jwtAxios.delete(`${prefixUrl}/api/sharePost/user?userId=${sharePost.sharedByUserId}&postId=${sharePost.postFor}`,{context:ctx})
+}
+
 
 const api = Object.freeze({
     getPageableAuth,
@@ -42,7 +49,8 @@ const api = Object.freeze({
     updateSharePostByIdAuth,
     deleteSharePostByIdAuth,
     getNumberOfShares,
-    getMySharedPostsAuth
+    getMySharedPostsAuth,
+    deleteSharePostByUserIdAndPostIdAuth
  });
 
 export default api

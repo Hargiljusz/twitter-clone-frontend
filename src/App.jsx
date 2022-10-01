@@ -10,6 +10,8 @@ import Activitybar from "./assets/Activitybar";
 import routes from "./utils/routesData";
 import Profile from "./pages/Profile";
 import User from "./pages/User";
+import Tag from "./pages/Tag";
+import ScrollToTop from "./assets/ScrollToTop"
 
 const client = new QueryClient() 
 
@@ -22,11 +24,13 @@ function App() {
         <QueryClientProvider client={client}>
           <Sidebar />
           <Container>
-            <Routes>
-              <Route path={routes.Home} element={<Home />} />
-              <Route path={routes.Profile} element={<Profile />} />
-              <Route path={`${routes.User}/:id`} element={<User />} />
-            </Routes> 
+            <ScrollToTop />
+              <Routes>
+                <Route path={routes.Home} element={<Home />} />
+                <Route path={routes.Profile} element={<Profile />} />
+                <Route path={routes.UserById} element={<User />} />
+                <Route path={routes.TagByName} element={<Tag />} />
+              </Routes> 
           </Container>
           <Activitybar />
           <ReactQueryDevtools initialIsOpen={false}/>

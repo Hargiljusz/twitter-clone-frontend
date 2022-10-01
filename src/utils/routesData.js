@@ -1,7 +1,8 @@
 const routes = {
     Home: "/",
     Register:"/register",
-    User:"/user",
-    Profile:"/me"
+    UserById:"/user/:id",
+    Profile:"/me",
+    TagByName:"/tag/:tagName"
 }
 export default routes;

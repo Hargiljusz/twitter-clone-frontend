@@ -1,6 +1,29 @@
 .custom-post{
   color: whitesmoke;
-  padding: 1.5rem 1rem 1rem 1rem;
+  padding: .5rem 1rem 1rem 1rem;
+  background-color: #2f4050,;
+  border: none;
+  width: 85%;
+}
+
+.post-author-img{
+  width: 15%;
+  max-width: 80px;
+  max-height: 80px;
+  background-color:violet;
+  border-radius: 50%;
+}
+
+.post-author-img:hover{
+  cursor: pointer;
+}
+
+.footer-wrapper{
+  font-size: .75rem;
+  width: 70%;
+  display: flex;
+  justify-content: space-between;
+  margin-top: .25rem
 }
 .fotter-items {
   padding: .5rem .25rem .5rem .25rem;
@@ -9,17 +32,81 @@
   justify-content: space-between;
 }
 
- .like-icon {
+.icon {
   color:  whitesmoke;
   font-size: 1.5rem;
    border: 1px;
    border-radius: 5px;
 }
 
- .like-icon:hover {
+.icon:hover {
   color: blue;
+  cursor: pointer;
 }
 
- .active {
+.active {
   color: orchid;
+}
+
+.post-header{
+  padding:0px 0px 10px 0px;
+  font-size: .75rem
+}
+
+.post-wrapper{
+  padding: .75rem .75rem 0rem .75rem;
+  display: flex;
+  flex-direction: row;
+  border-bottom: 1px solid grey;
+}
+
+.nick{
+color: whitesmoke;
+}
+.nick:hover {
+  cursor: pointer;
+}
+
+.userName{
+  margin-left: .75rem;
+  opacity: .75;
+  cursor: pointer;
+}
+
+.date{
+  margin-left: .75rem;
+  opacity: .75;
+}
+
+
+.tag {
+  color: rgb(39, 118, 223);
+}
+
+.tag:hover{
+  color: rgb(43, 85, 139);
+  cursor: pointer;
+}
+
+.custom-info-wrapper {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  margin-top: 1rem;
+  margin-inline: 5%;
+}
+
+.info-alert{
+  font-weight: bold;
+}
+
+.info-alert-link{
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.spinner-position{
+  margin-top: 1rem;
+ display: flex;
+ justify-content: center;
 }

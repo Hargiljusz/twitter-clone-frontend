@@ -45,7 +45,10 @@ const useSharePost = ()=>{
         return GraphQLSharePostAPI.numberOfShares(postId)
     }
 
-    const addSharePostAuth = async(sharePost = undefined,query=undefined)=>{
+    const addSharePostAuth = async(sharePost = {
+        postFor: "postId",
+        sharedByUserId: "userId"
+      },query=undefined)=>{
         if(backendType === BackendType.RestAPI){
             return RestSharePostAPI.addSharePostAuth(sharePost,context)
         }
@@ -70,6 +73,17 @@ const useSharePost = ()=>{
         const result = await sendAuth((gqlClient)=>GraphQLSharePostAPI.deleteSharePostByIdAuth(query,gqlClient))
         return result
     }
+    const deleteSharePostByUserIdAndPostIdAuth =  async(sharePost = {
+        postFor: "postId",
+        sharedByUserId: "userId"
+      },queryResult=undefined) =>{
+        if(backendType === BackendType.RestAPI){
+            return RestSharePostAPI.deleteSharePostByUserIdAndPostIdAuth(sharePost,context)
+        }
+
+        const result = await sendAuth((gqlClient)=>GraphQLSharePostAPI.deleteSharePostByUserIdAndPostIdAuth(queryResult,gqlClient))
+        return result
+    }
 
 
     return Object.freeze({
@@ -79,7 +93,8 @@ const useSharePost = ()=>{
         getNumberOfShares,
         addSharePostAuth,
         updateSharePostAuth,
-        deleteSharePostByIdAuth
+        deleteSharePostByIdAuth,
+        deleteSharePostByUserIdAndPostIdAuth
      });
 }
 

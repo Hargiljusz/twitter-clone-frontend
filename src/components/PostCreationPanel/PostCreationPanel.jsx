@@ -52,7 +52,7 @@ const PostCreationPanel = ({refreshCallback}) => {
         postMutation.mutate(postContetnt)
         setPostContetnt("")
         setShowAlert(false)
-        refreshCallback(true)
+        refreshCallback(prev=>!prev)
     }
 
   return (

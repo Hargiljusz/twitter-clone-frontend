@@ -44,7 +44,7 @@ const useLike = ()=>{
         return GraphQLLikeAPI.numberOfLikes(postId)
     }
 
-    const addLikeAuth = async(Like = undefined,query=undefined)=>{
+    const addLikeAuth = async(Like = {userId :"", postFor: ""},query=undefined)=>{
         if(backendType === BackendType.RestAPI){
             return RestLikeAPI.addLikeAuth(Like,context)
         }
@@ -70,6 +70,15 @@ const useLike = ()=>{
         return result
     }
 
+    const deleteLikeByUserIdAndPostIdAuth = async(like = {userId :"", postFor: ""},queryResult=undefined)=>{
+        if(backendType === BackendType.RestAPI){
+            return RestLikeAPI.deleteLikeByUserIdAndPostIdAuth(like,context)
+        }
+
+        const result = await sendAuth((gqlClient)=>GraphQLLikeAPI.deleteLikeByUserIdAndPostIdAuth(queryResult,gqlClient))
+        return result
+    }
+
 
     return Object.freeze({
         getLikeByIdAuth,
@@ -78,7 +87,8 @@ const useLike = ()=>{
         getNumberOfShares,
         addLikeAuth,
         updateLikeAuth,
-        deleteLikeByIdAuth
+        deleteLikeByIdAuth,
+        deleteLikeByUserIdAndPostIdAuth
      });
 }
 
