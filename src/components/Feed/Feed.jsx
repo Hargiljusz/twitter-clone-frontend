@@ -17,13 +17,14 @@ const Feed = ({ refresh, refreshCallback }) => {
         isFetching,
         isSuccess,
         refetch,
+        isRefetching,
         isError,
         error,
         data,
         hasNextPage,
         isFetchingNextPage,
         fetchNextPage
-    } = useInfiniteQuery(['feed'], ({ pageParam = 0 }) => feedAuth(pageParam, 10, `
+    } = useInfiniteQuery(['feed'], ({ pageParam = 0 }) => feedAuth(pageParam, 20, `
                     content {
                         id,
                         createByUser,
@@ -35,6 +36,8 @@ const Feed = ({ refresh, refreshCallback }) => {
         {
             enabled: true,
             refetchOnWindowFocus: false,
+            keepPreviousData:true,
+            cacheTime: 10*60*1000,
             getNextPageParam: (lastPage, allPage) => {
                 if (lastPage.data.pageNumber + 1 === lastPage.data.totalPageCount) {
                     return undefined
@@ -43,7 +46,7 @@ const Feed = ({ refresh, refreshCallback }) => {
             }
         }
     )
-
+//console.log("isFetching "+isFetching,"isLoading "+isLoading,"isRefetching "+isRefetching)
 
 
     useEffect(() => {
@@ -53,6 +56,7 @@ const Feed = ({ refresh, refreshCallback }) => {
     }, [inView])
 
 
+    
     if (isLoading) {
         return <LoadSpinner className={`spinner-position`} />
     } else {
@@ -69,10 +73,11 @@ const Feed = ({ refresh, refreshCallback }) => {
                     return (
                         <Fragment key={idx}>
                             {group?.data?.content.map((p, i) => <Post key={i} post={p} />)}
-                            {isFetchingNextPage ? <LoadSpinner className={`spinner-position`} /> : null}
+                           
                         </Fragment>
                     )
                 })}
+                 {isFetchingNextPage  ? <LoadSpinner className={`spinner-position`} /> : null}
                 <div style={{ visibility: "hidden" }} ref={ref}>Load More</div>
             </>
         )

@@ -1,0 +1,46 @@
+.user-info-wrapper{
+    position: relative;
+}
+
+.user-bg-img{
+    max-width: 100%;
+    max-height: 20vh;
+    padding-left: 5%;
+    padding-right: 5%;
+    background-size:     cover;                      /* <------ */
+    background-repeat:   no-repeat;
+    background-position: center center;
+}
+
+.avatar {
+    border-radius: 50%;
+    max-width: 140px;
+    max-height: 140px;
+    position: absolute;
+    top: calc(20vh - 70px);
+    left: 2.5%;
+}
+
+#user-info{
+    width: 100%;
+    padding-bottom: 1rem;
+    padding-top: 80px;
+    padding-left: 1rem;
+}
+
+.coloredTab {
+    color: whitesmoke !important;
+  }
+
+.coloredTab.nav-link.active{
+    color: black !important;
+    border-radius: 0;
+} 
+
+
+.tab-content-custom{
+    color: whitesmoke;
+    padding: 1rem;
+}
+
+

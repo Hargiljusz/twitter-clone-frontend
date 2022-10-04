@@ -20,11 +20,6 @@ const PostCreationPanel = ({refreshCallback}) => {
             createByUserId: user.userId
         }
         return addPostAuth(newPost,`id`)
-    },{
-         onSuccess: (data,variable,context)=>{
-            console.log(data)
-            console.log(variable)
-         }
     })
 
     useEffect(()=>{

@@ -46,6 +46,10 @@ const Post = ({post}) => {
         navigate(`/tag/${tagName}`)
     }
 
+    const postNavigateClic = (postId) =>{
+        navigate(`/post/${postId}`)
+    }
+
     const formatDate = (date) =>{
         const [YY_MM_DD,HH_MM_SS_MILI] = date.split("T")
         const [HH_MM_SS,MILI] = HH_MM_SS_MILI.split(".")
@@ -97,15 +101,16 @@ const Post = ({post}) => {
 
   return (
     
-    <div className='post-wrapper'>
-        <img className='post-author-img' alt='img' src={`rest/api/files/${post.createByUser.photo}`} onClick={()=>navigateToUser(post.createByUser.id)} />
+    <div className='post-wrapper'  >
+        <img className='post-author-img' alt='img' src={`/rest/api/files/${post.createByUser.photo.replace('\\','/')}`} onClick={()=>navigateToUser(post.createByUser.id)} />
         <div className='custom-post'>
             <div className='post-header'>
                 <span className='nick' onClick={()=>navigateToUser(post.createByUser.id)}>{post.createByUser.nick}</span>
                 <span className='userName' onClick={()=>navigateToUser(post.createByUser.id)}>@{post.createByUser.userName}</span>
                 <span className='date'>{formatDate(post.createdAt).join(" ")}</span>
             </div>
-                {memoContent}
+            <div style={{cursor:'pointer'}} onClick={()=>postNavigateClic(post.id)}>{memoContent}</div>
+                
 
             <div className='footer-wrapper' >
                 <div className='fotter-items'>
