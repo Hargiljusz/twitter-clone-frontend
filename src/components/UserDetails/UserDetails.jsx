@@ -1,14 +1,17 @@
-import React,{useRef} from 'react'
+import React,{useRef,useContext} from 'react'
 import useUser from "../../hooks/userHook"
 import { useQuery } from '@tanstack/react-query'
 import LoadSpinner from "../../assets/LoadSpinner/LoadSpinner"
 import UserTabs from './UserTabs'
+import AuthContext from '../../context/AuthContext'
+import Following from './Following'
 import "./UserDetails.css" 
 
 const UserDetails = ({userId}) => {
     const {getById} = useUser()
     const imgRef = useRef(null)
     const imgWrapperRef = useRef(null)
+    const {user} = useContext(AuthContext)
 
     const {data,isFetching,isLoading} = useQuery(
       ["user",userId],
@@ -40,12 +43,13 @@ const UserDetails = ({userId}) => {
           <strong>{data.nick}</strong>
           <br />
           <span >@{data.userName}</span>
+          {userId !== user.userId ?  <Following siteUserId={userId} /> : null}
           <br  />
           <span ><strong>125</strong> Obserwowanych</span>
           <span style={{marginLeft: "10rem"}}><strong>29</strong> Obserwujących</span>
         </div>
         <div style={{marginTop: '2rem'}}>
-       {userId === data.id ?  <UserTabs userId={data.id} /> : null}
+        {userId === user.userId ?  <UserTabs userId={data.id} /> : null}
         </div>
     </div>
   )

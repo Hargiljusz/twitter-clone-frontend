@@ -32,6 +32,10 @@ const unfollow = (followUserId,ctx) =>{
 }
 
 
+const checkFollowAuth = (checkUserId,ctx)=>{
+    return jwtAxios.get(`${prefixUrl}/api/follow/check?checkUserId=${checkUserId}`,{context:ctx})
+}
+
 
 const api = Object.freeze({
     getNumberOfFollowers,
@@ -40,7 +44,8 @@ const api = Object.freeze({
     getMyFollowersAuth,
     getMyFollowingsAuth,
     followAuth,
-    unfollow
+    unfollow,
+    checkFollowAuth
  });
 
 export default api

@@ -11,6 +11,7 @@ const MyLikedPost = () => {
       enabled: true,
       refetchOnWindowFocus: false,
       keepPreviousData:true,
+      cacheTime: 0,
       getNextPageParam: (lastPage, allPage) => {
           if (lastPage.data.pageNumber + 1 === lastPage.data.totalPageCount) {
               return undefined

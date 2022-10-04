@@ -11,7 +11,7 @@ const MySharedPost = () => {
       enabled: true,
       refetchOnWindowFocus: false,
       keepPreviousData:true,
-      cacheTime:10*60*1000,
+      cacheTime: 0,
       getNextPageParam: (lastPage, allPage) => {
           if (lastPage.data.pageNumber + 1 === lastPage.data.totalPageCount) {
               return undefined

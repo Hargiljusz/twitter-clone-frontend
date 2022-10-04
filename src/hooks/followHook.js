@@ -5,7 +5,7 @@ import AuthContext,{BackendType} from "../context/AuthContext"
 import useGraphQlInterceptor from "../utils/GraphQLInterceptor"
 
 
-const useSharePost = ()=>{
+const useFollow = ()=>{
     const context = useContext(AuthContext)
     const {backendType} = context
     const {sendAuth} = useGraphQlInterceptor()
@@ -69,6 +69,15 @@ const useSharePost = ()=>{
         return result
     }
 
+    const checkFollowAuth = async(checkUserId,query=undefined)=>{
+        if(backendType === BackendType.RestAPI){
+            return RestFollowAPI.checkFollowAuth(checkUserId,context)
+        }
+
+        const result = await sendAuth((gqlClient)=>GraphQLFollowAPI.checkFollowAuth(query,gqlClient))
+        return result
+    }
+
 
     return Object.freeze({
         getNumberOfFollowers,
@@ -77,8 +86,9 @@ const useSharePost = ()=>{
         getMyFollowersAuth,
         getMyFollowingsAuth,
         followAuth,
-        unfollowAuth
+        unfollowAuth,
+        checkFollowAuth
      });
 }
 
-export default useSharePost
+export default useFollow
