@@ -1,5 +1,6 @@
 import React,{useRef,useContext} from 'react'
 import useUser from "../../hooks/userHook"
+import useFollow from '../../hooks/followHook'
 import { useQuery } from '@tanstack/react-query'
 import LoadSpinner from "../../assets/LoadSpinner/LoadSpinner"
 import UserTabs from './UserTabs'
@@ -11,6 +12,7 @@ import "./UserDetails.css"
 
 const UserDetails = ({userId}) => {
     const {getById} = useUser()
+    const {getNumberOfFollowers,getNumberOfFollowing} = useFollow()
     const imgRef = useRef(null)
     const imgWrapperRef = useRef(null)
     const {user} = useContext(AuthContext)
@@ -23,6 +25,10 @@ const UserDetails = ({userId}) => {
       },
       {keepPreviousData:true,refetchOnWindowFocus:false})
 
+
+      const {data:followerNumber,isLoading:isLoadingFollowerNumber} = useQuery(["followerNumber"],()=>getNumberOfFollowers(userId))
+      const {data:followingNumber,isLoading:isLoadingFollowingNumber} = useQuery(["followingNumber"],()=>getNumberOfFollowing(userId))
+
       const handleImgError = () =>{
         if(!imgRef) {
           return
@@ -32,7 +38,7 @@ const UserDetails = ({userId}) => {
         imgWrapperRef.current.style.backgroundImage = `url(/bgPhoto.png)`
       }
 
-  if(isFetching){
+  if(isFetching || isLoadingFollowerNumber || isLoadingFollowingNumber){
     return <LoadSpinner className={`spinner-position`} />
   }   
   return (
@@ -50,8 +56,8 @@ const UserDetails = ({userId}) => {
           </div> : null}
 
           <div>
-            <Link className='follows-link' to={`#`}><strong>125</strong> Obserwowanych</Link>
-            <Link style={{marginLeft: "10rem"}} className='follows-link' to={`#`}><strong>29</strong> Obserwujących</Link>
+            <Link className='follows-link' to={`#`}><strong>{followerNumber?.data?.count}</strong> Obserwowanych</Link>
+            <Link style={{marginLeft: "10rem"}} className='follows-link' to={`#`}><strong>{followingNumber?.data?.count}</strong> Obserwujących</Link>
           </div>
         </div>
         <div style={{marginTop: '2rem'}}>
