@@ -67,6 +67,10 @@ const popularPosts = (tag,page = 0,size = 10) => {
     return axios.get(`${prefixUrl}/api/post/popular?tag=${tag}&pageNumber=${page}&pageSize=${size}`)
 }
 
+const getPostByUserId = (userId,page = 0,size = 10)=>{
+    return axios.get(`${prefixUrl}/api/post/user/${userId}?pageNumber=${page}&pageSize=${size}`)
+}
+
 
 const api = Object.freeze({
     getPageable,
@@ -84,7 +88,8 @@ const api = Object.freeze({
     subpostsForUser,
     subpostsForPost,
     newestPosts,
-    popularPosts
+    popularPosts,
+    getPostByUserId
  });
 
 export default api

@@ -38,6 +38,7 @@ const Feed = ({ refresh, refreshCallback }) => {
             refetchOnWindowFocus: false,
             keepPreviousData:true,
             cacheTime: 10*60*1000,
+            staleTime: 5*60*1000,
             getNextPageParam: (lastPage, allPage) => {
                 if (lastPage.data.pageNumber + 1 === lastPage.data.totalPageCount) {
                     return undefined

@@ -5,6 +5,8 @@ import LoadSpinner from "../../assets/LoadSpinner/LoadSpinner"
 import UserTabs from './UserTabs'
 import AuthContext from '../../context/AuthContext'
 import Following from './Following'
+import { Link } from 'react-router-dom'
+import SiteUserPosts from "./SiteUserPosts"
 import "./UserDetails.css" 
 
 const UserDetails = ({userId}) => {
@@ -41,15 +43,19 @@ const UserDetails = ({userId}) => {
         <img className='avatar'  src={`/rest/api/files/${data.photo.replace('\\','/')}`} alt='img'  />
         <div id='user-info'>
           <strong>{data.nick}</strong>
-          <br />
           <span >@{data.userName}</span>
-          {userId !== user.userId ?  <Following siteUserId={userId} /> : null}
-          <br  />
-          <span ><strong>125</strong> Obserwowanych</span>
-          <span style={{marginLeft: "10rem"}}><strong>29</strong> Obserwujących</span>
+          {userId !== user.userId ?  
+          <div style={{marginTop:".5rem",marginBottom:".5rem"}}>
+            <Following siteUserId={userId} />
+          </div> : null}
+
+          <div>
+            <Link className='follows-link' to={`#`}><strong>125</strong> Obserwowanych</Link>
+            <Link style={{marginLeft: "10rem"}} className='follows-link' to={`#`}><strong>29</strong> Obserwujących</Link>
+          </div>
         </div>
         <div style={{marginTop: '2rem'}}>
-        {userId === user.userId ?  <UserTabs userId={data.id} /> : null}
+        {userId === user.userId ?  <UserTabs userId={data.id} /> : <SiteUserPosts siteUserId={userId} />}
         </div>
     </div>
   )

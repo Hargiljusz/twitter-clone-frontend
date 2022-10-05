@@ -136,6 +136,14 @@ const usePost = ()=>{
 
         return GraphQLPostAPI.popularPosts(query)
     }
+
+    const getPostByUserId = (userId,page = 0,size = 10,query= undefined) =>{
+        if(backendType === BackendType.RestAPI){
+            return RestPostAPI.getPostByUserId(userId,page,size)
+        }
+
+        throw new Error("Not Implemented")
+    }
     
     return Object.freeze({
         getPageable,
@@ -153,7 +161,8 @@ const usePost = ()=>{
         subpostsForUser,
         subpostsForPost,
         newestPosts,
-        popularPosts
+        popularPosts,
+        getPostByUserId
      });
 }
 

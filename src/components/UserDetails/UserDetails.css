@@ -26,6 +26,8 @@
     padding-bottom: 1rem;
     padding-top: 80px;
     padding-left: 1rem;
+    display: flex;
+    flex-direction: column;
 }
 
 .coloredTab {
@@ -41,6 +43,22 @@
 .tab-content-custom{
     color: whitesmoke;
     padding: 1rem;
+}
+
+.follows-link{
+    text-decoration:none;
+    color:whitesmoke
+}
+.follows-link:hover{
+    color: rgb(39, 118, 223);
+    text-decoration: underline;
+    text-decoration-color: rgb(39, 118, 223);
+    text-underline-offset: .25rem;
+}
+
+.site-user{
+    text-align: center;
+    border-bottom: 1px solid whitesmoke;
 }
 
 

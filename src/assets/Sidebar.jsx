@@ -26,7 +26,7 @@ const Sidebar = () => {
           </Link>
 
         {userStatus.isLogged ?
-        <Link to={routes.Profile}>
+        <Link to={`user/${user.userId}`}>
           <li className="SidebarRow">
               <BsFillPersonFill className="Icon"></BsFillPersonFill>
               <div className="Title">Person</div>

@@ -53,7 +53,7 @@ const SearchBar = () => {
         if(searchInput && searchInput !== ""){
             refetchTag()
             refetchUser()
-            console.log("sended")
+            //console.log("sended")
             // resultTag?.content.length > 0 ? console.log("tag",resultTag):null;
             // resultUser?.content.length > 0 ? console.log("user",resultUser): null;
         }

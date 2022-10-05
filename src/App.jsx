@@ -8,7 +8,6 @@ import Sidebar from "./assets/Sidebar";
 import Container from "./assets/Container";
 import Activitybar from "./assets/Activitybar";
 import routes from "./utils/routesData";
-import Profile from "./pages/Profile";
 import User from "./pages/User";
 import Tag from "./pages/Tag";
 import ScrollToTop from "./assets/ScrollToTop"
@@ -27,7 +26,7 @@ function App() {
             <ScrollToTop />
               <Routes>
                 <Route path={routes.Home} element={<Home />} />
-                <Route path={routes.Profile} element={<Profile />} />
+                <Route path={routes.UserById} element={<User />} />
                 <Route path={routes.UserById} element={<User />} />
                 <Route path={routes.TagByName} element={<Tag />} />
               </Routes> 
