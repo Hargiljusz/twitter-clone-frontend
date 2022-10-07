@@ -1,12 +1,13 @@
 import React from 'react'
 import { useParams } from 'react-router-dom'
+import PostByTag from '../components/PostByTag/PostByTag'
 
 const Tag = () => {
 
     const {tagName} = useParams()
 
   return (
-    <div>Tag: {tagName}</div>
+    <PostByTag  tagName={tagName}/>
   )
 }
 

@@ -11,6 +11,7 @@ import routes from "./utils/routesData";
 import User from "./pages/User";
 import Tag from "./pages/Tag";
 import ScrollToTop from "./assets/ScrollToTop"
+import Post from "./pages/Post";
 
 const client = new QueryClient() 
 
@@ -29,6 +30,7 @@ function App() {
                 <Route path={routes.UserById} element={<User />} />
                 <Route path={routes.UserById} element={<User />} />
                 <Route path={routes.TagByName} element={<Tag />} />
+                <Route path={routes.PostById} element={<Post/>} />
               </Routes> 
           </Container>
           <Activitybar />

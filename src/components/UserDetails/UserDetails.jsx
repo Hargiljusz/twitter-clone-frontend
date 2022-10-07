@@ -26,8 +26,8 @@ const UserDetails = ({userId}) => {
       {keepPreviousData:true,refetchOnWindowFocus:false})
 
 
-      const {data:followerNumber,isLoading:isLoadingFollowerNumber} = useQuery(["followerNumber"],()=>getNumberOfFollowers(userId))
-      const {data:followingNumber,isLoading:isLoadingFollowingNumber} = useQuery(["followingNumber"],()=>getNumberOfFollowing(userId))
+      const {data:followerNumber,isLoading:isLoadingFollowerNumber} = useQuery(["followerNumber",userId],()=>getNumberOfFollowers(userId))
+      const {data:followingNumber,isLoading:isLoadingFollowingNumber} = useQuery(["followingNumber",userId],()=>getNumberOfFollowing(userId))
 
       const handleImgError = () =>{
         if(!imgRef) {

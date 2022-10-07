@@ -42,11 +42,13 @@ const Post = ({post}) => {
         await deleteSharePostByUserIdAndPostIdAuth({postFor: postId,sharedByUserId:user.userId})
     }
 
-    const tagHandleClick = (tagName) =>{
+    const tagHandleClick = (e,tagName) =>{
+        e.stopPropagation()
         navigate(`/tag/${tagName}`)
     }
 
-    const postNavigateClic = (postId) =>{
+    const postNavigateClick = (e,postId) =>{
+        e.stopPropagation()
         navigate(`/post/${postId}`)
     }
 
@@ -109,7 +111,7 @@ const Post = ({post}) => {
                 <span className='userName' onClick={()=>navigateToUser(post.createByUser.id)}>@{post.createByUser.userName}</span>
                 <span className='date'>{formatDate(post.createdAt).join(" ")}</span>
             </div>
-            <div style={{cursor:'pointer'}} onClick={()=>postNavigateClic(post.id)}>{memoContent}</div>
+            <div style={{cursor:'pointer'}} onClick={(e)=>postNavigateClick(e,post.id)}>{memoContent}</div>
                 
 
             <div className='footer-wrapper' >
@@ -129,7 +131,7 @@ const Post = ({post}) => {
 
 export default Post
 
-const highlighText = (text,regex,handleClick) =>{
+export const highlighText = (text,regex,handleClick) =>{
     if (!text || !(regex instanceof RegExp)) {
         return <div>text</div>;
       }
@@ -142,7 +144,7 @@ const highlighText = (text,regex,handleClick) =>{
                 if(idx < matchedWords.length){
                     return <span key={idx}>
                             <span>{text}</span>
-                            <span className='tag' onClick={()=>handleClick(matchedWords[idx].substring(1))}>{matchedWords[idx]}</span>
+                            <span className='tag' onClick={(e)=>handleClick(e,matchedWords[idx].substring(1))}>{matchedWords[idx]}</span>
                             </span>
                 }
                 return <span key={idx}>{text}</span>
