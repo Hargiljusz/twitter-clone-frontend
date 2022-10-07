@@ -5,9 +5,10 @@ import AuthContext from '../../context/AuthContext'
 import { Alert } from 'react-bootstrap'
 import "./PostCreationPanel.css"
 
-const PostCreationPanel = ({refreshCallback}) => {
+const PostCreationPanel = ({refreshCallback,postFor = ""}) => {
     const {addPostAuth} = usePost();
     const textAreRef = useRef(null)
+    const imagesRef = useRef(null)
     const maxCharacterNumber = 280
     const [postContetnt,setPostContetnt] = useState("")
     const [showAlert,setShowAlert] = useState(false)
@@ -16,10 +17,10 @@ const PostCreationPanel = ({refreshCallback}) => {
     const postMutation = useMutation(postContent =>{
         const newPost = {
             contetnt:postContent,
-            postFor:"",
+            postFor:postFor,
             createByUserId: user.userId
         }
-        return addPostAuth(newPost,`id`)
+        return addPostAuth(newPost,imagesRef.current.files,`id`)
     })
 
     useEffect(()=>{
@@ -56,6 +57,7 @@ const PostCreationPanel = ({refreshCallback}) => {
             <Alert variant='danger' show={showAlert} className='custom-alert'>Przekroczono Maksymalną ilość znaków</Alert>
             <div className='info-wrapper'>
                 <span>{postContetnt.length}/{maxCharacterNumber}</span>
+                <input ref={imagesRef} type='file' multiple accept='image/*'/>
                 <button className='custom-button' onClick={handleSend}>Postuj</button>
             </div>
         </div>

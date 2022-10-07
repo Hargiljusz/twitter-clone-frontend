@@ -49,7 +49,7 @@ const Post = ({post}) => {
 
     const postNavigateClick = (e,postId) =>{
         e.stopPropagation()
-        navigate(`/post/${postId}`)
+        navigate(`/post/${postId}`,{state:{isShared: post.isShared,isLiked:post.isLiked}})
     }
 
     const formatDate = (date) =>{
@@ -111,7 +111,12 @@ const Post = ({post}) => {
                 <span className='userName' onClick={()=>navigateToUser(post.createByUser.id)}>@{post.createByUser.userName}</span>
                 <span className='date'>{formatDate(post.createdAt).join(" ")}</span>
             </div>
-            <div style={{cursor:'pointer'}} onClick={(e)=>postNavigateClick(e,post.id)}>{memoContent}</div>
+            <div style={{cursor:'pointer'}} onClick={(e)=>postNavigateClick(e,post.id)}>
+                {memoContent}
+                    <div style={{display:"flex",flexDirection:"row",justifyContent:"center"}}>
+                        {post?.multimediaDTO?.files.map((fsrc,idx) => <img key={idx} style={{width:"40%",paddingTop:".5rem"}} src={`/rest/api/files/${fsrc}`}/>)}
+                    </div>
+            </div>
                 
 
             <div className='footer-wrapper' >

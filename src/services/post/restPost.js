@@ -11,8 +11,18 @@ const getById = (id) => {
     return axios.get(`${prefixUrl}/api/post/${id}`)
 }
 
-const addPostAuth = (post,ctx) =>{
-    return jwtAxios.post(`${prefixUrl}/api/post/`,post,{context: ctx})
+const addPostAuth = (post,files = [],ctx) =>{
+    
+    const formData = new FormData()
+
+    for (let i = 0; i < files.length; i++) {
+        formData.append('Files',files[i],files[i].name)
+    }
+
+    formData.append('Contetnt',post.contetnt)
+    formData.append('CreateByUserId',post.createByUserId)
+    formData.append('PostFor',post.postFor)
+    return jwtAxios.post(`${prefixUrl}/api/post/`,formData,{context: ctx,headers: { "Content-Type": "multipart/form-data" }})
 } 
 
 const updatePostByIdAuth = (id,post,ctx) =>{

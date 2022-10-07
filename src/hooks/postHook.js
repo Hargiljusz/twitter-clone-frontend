@@ -25,9 +25,9 @@ const usePost = ()=>{
         return GraphQLPostAPI.getPageable(query)
     }
 
-    const addPostAuth = async ({contetnt,createByUserId,postFor},mutationResult = undefined) =>{
+    const addPostAuth = async ({contetnt,createByUserId,postFor},files,mutationResult = undefined) =>{
         if(backendType === BackendType.RestAPI){
-            return RestPostAPI.addPostAuth({contetnt,createByUserId,postFor},context)
+            return RestPostAPI.addPostAuth({contetnt,createByUserId,postFor},files,context)
         }
         const result = await sendAuth((gqlClient)=>GraphQLPostAPI.addPostAuth({contetnt,createByUserId,postFor},mutationResult,gqlClient))
         return result
