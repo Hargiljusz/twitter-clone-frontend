@@ -7,13 +7,34 @@ import { useInView } from 'react-intersection-observer';
 
 const MySubpost = ({userId}) => {
     const {subpostsForUser} = usePosts()
-    const {data,isLoading,isFetchingNextPage,fetchNextPage,hasNextPage} = useInfiniteQuery([["mySubposts"]],({ pageParam = 0 })=>subpostsForUser(userId,pageParam,20) ,  {
+    const {data,isLoading,isFetchingNextPage,fetchNextPage,hasNextPage} = useInfiniteQuery([["mySubposts"]],async({ pageParam = 0 })=>{
+            const result = await subpostsForUser(userId,pageParam,20,`
+            content {
+                id,
+                createByUser {
+                    backgroundPhoto,
+                    photo,
+                    userName,
+                    nick,
+                    id
+                  },
+                createdAt,
+                isLiked,
+                isShared,
+                content,
+                likeNumber,
+                shareNumber
+            },
+            totalPageCount,
+            pageNumber`)
+            return result.data
+    } ,  {
       enabled: true,
       refetchOnWindowFocus: false,
       keepPreviousData:true,
       cacheTime:10*60*1000,
       getNextPageParam: (lastPage, allPage) => {
-          if (lastPage.data.pageNumber + 1 === lastPage.data.totalPageCount) {
+          if (lastPage.pageNumber + 1 === lastPage.totalPageCount) {
               return undefined
           }
           return allPage.length
@@ -39,12 +60,12 @@ const MySubpost = ({userId}) => {
     {data?.pages.map((group, idx) => {
                     return (
                         <Fragment key={idx}>
-                            {group?.data?.content.map((p, i) => <Post key={i} post={p} />)}
+                            {group?.content.map((p, i) => <Post key={i} post={p} />)}
                         </Fragment>
                     )
                 })
     }
-    {data?.pages[0]?.data?.content.length === 0 ? <span>Brak Sub postów</span>:null} 
+    {data?.pages[0]?.content.length === 0 ? <span>Brak Sub postów</span>:null} 
     {isFetchingNextPage  ? <LoadSpinner className={`spinner-position`} /> : null}
      <div style={{ visibility: "hidden" }} ref={ref}>Load More</div>
    </>

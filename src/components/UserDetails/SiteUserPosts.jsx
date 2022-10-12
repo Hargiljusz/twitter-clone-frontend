@@ -7,13 +7,34 @@ import { useInView } from 'react-intersection-observer';
 
 const SiteUserPosts = ({siteUserId}) => {
     const {getPostByUserId} = usePosts()
-    const {data,isLoading,isFetchingNextPage,fetchNextPage,hasNextPage} = useInfiniteQuery([["postByUserId",siteUserId]],({ pageParam = 0 })=>getPostByUserId(siteUserId,pageParam,20) ,  {
+    const {data,isLoading,isFetchingNextPage,fetchNextPage,hasNextPage} = useInfiniteQuery([["postByUserId",siteUserId]],async ({ pageParam = 0 })=>{
+        const result = await getPostByUserId(siteUserId,pageParam,20,`
+        content {
+            id,
+            createByUser {
+                backgroundPhoto,
+                photo,
+                userName,
+                nick,
+                id
+              },
+            createdAt,
+            isLiked,
+            isShared,
+            content,
+            likeNumber,
+            shareNumber
+        },
+        totalPageCount,
+        pageNumber`)
+        return result.data
+    } ,  {
       enabled: true,
       refetchOnWindowFocus: false,
       keepPreviousData:true,
       cacheTime:10*60*1000,
       getNextPageParam: (lastPage, allPage) => {
-          if (lastPage.data.pageNumber + 1 === lastPage.data.totalPageCount) {
+          if (lastPage.pageNumber + 1 === lastPage.totalPageCount) {
               return undefined
           }
           return allPage.length
@@ -40,7 +61,7 @@ const SiteUserPosts = ({siteUserId}) => {
     {data?.pages.map((group, idx) => {
                     return (
                         <Fragment key={idx}>
-                            {group?.data?.content.map((p, i) => <Post key={i} post={p} />)}
+                            {group?.content.map((p, i) => <Post key={i} post={p} />)}
                            
                         </Fragment>
                     )

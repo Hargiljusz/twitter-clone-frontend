@@ -51,30 +51,30 @@ const useFollow = ()=>{
         return result
     }
 
-    const followAuth = async(followUserId,query=undefined)=>{
+    const followAuth = async(followUserId,mutationResult=undefined)=>{
         if(backendType === BackendType.RestAPI){
             return RestFollowAPI.followAuth(followUserId,context)
         }
 
-        const result = await sendAuth((gqlClient)=>GraphQLFollowAPI.followAuth(query,gqlClient))
+        const result = await sendAuth((gqlClient)=>GraphQLFollowAPI.followAuth(followUserId,mutationResult,gqlClient))
         return result
     }
 
-    const unfollowAuth = async(followUserId,query=undefined)=>{
+    const unfollowAuth = async(followUserId,mutationResult=undefined)=>{
         if(backendType === BackendType.RestAPI){
             return RestFollowAPI.unfollow(followUserId,context)
         }
 
-        const result = await sendAuth((gqlClient)=>GraphQLFollowAPI.unfollowAuth(query,gqlClient))
+        const result = await sendAuth((gqlClient)=>GraphQLFollowAPI.unfollowAuth(followUserId,mutationResult,gqlClient))
         return result
     }
 
-    const checkFollowAuth = async(checkUserId,query=undefined)=>{
+    const checkFollowAuth = async(checkUserId,queryResult=undefined)=>{
         if(backendType === BackendType.RestAPI){
             return RestFollowAPI.checkFollowAuth(checkUserId,context)
         }
 
-        const result = await sendAuth((gqlClient)=>GraphQLFollowAPI.checkFollowAuth(query,gqlClient))
+        const result = await sendAuth((gqlClient)=>GraphQLFollowAPI.checkFollowAuth(checkUserId,queryResult,gqlClient))
         return result
     }
 

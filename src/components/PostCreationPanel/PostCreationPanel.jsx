@@ -45,6 +45,10 @@ const PostCreationPanel = ({refreshCallback,postFor = ""}) => {
         setPostContetnt(content)
     }
     const handleSend = () =>{
+        if(imagesRef.current.files.length > 3){
+            alert("Maksymalnie 3 zdjęcia")
+            return
+        }
         postMutation.mutate(postContetnt)
         setPostContetnt("")
         setShowAlert(false)

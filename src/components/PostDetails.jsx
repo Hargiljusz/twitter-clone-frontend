@@ -16,7 +16,21 @@ const PostDetails = () => {
     //#region init data
     const {postId} = useParams()
     const {getById} = usePost()
-    const {isLoading,data} = useQuery(["postDetails",postId],()=>getById(postId),{refetchOnWindowFocus:false}) 
+    const {isLoading,data} = useQuery(["postDetails",postId],()=>getById(postId,`
+    id,
+    createByUser {
+        backgroundPhoto,
+        photo,
+        userName,
+        nick,
+        id
+      },
+    createdAt,
+    isLiked,
+    isShared,
+    content,
+    likeNumber,
+    shareNumber`),{refetchOnWindowFocus:false}) 
     const {state:{isLiked,isShared}} = useLocation()
     const navigate = useNavigate()
     const [localIsLiked,setLocalIsLiked] = useState(isLiked)
@@ -126,7 +140,7 @@ const PostDetails = () => {
                 <div>
                 {memoContent}
                     <div style={{display:"flex",flexDirection:"row",justifyContent:"center"}}>
-                        {data?.data?.multimediaDTO?.files.map((fsrc,idx) => <img key={idx} style={{width:"30%",paddingTop:".5rem"}} src={`/rest/api/files/${fsrc}`}/>)}
+                        {data?.data?.multimediaDTO?.files.map((fsrc,idx) => <img key={idx} style={{width:`${90/data?.data?.multimediaDTO?.files.length}%`,paddingTop:".5rem"}} src={`/rest/api/files/${fsrc}`}/>)}
                     </div>
                 </div>
                     

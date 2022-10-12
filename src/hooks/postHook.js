@@ -10,11 +10,11 @@ const usePost = ()=>{
     const {sendAuth} = useGraphQlInterceptor()
 
 
-    const getById = (id,query) =>{
+    const getById = (id,queryResult) =>{
         if(backendType ===BackendType.RestAPI){
             return RestPostAPI.getById(id)
         }
-        return GraphQLPostAPI.getById(query)
+        return GraphQLPostAPI.getById(id,queryResult)
     }
 
     const getPageable = (page = 0,size = 10,query= undefined) =>{
@@ -81,68 +81,68 @@ const usePost = ()=>{
         return result
     }
 
-    const likedPostsAuth = async (page = 0,size = 10,query= undefined) =>{
+    const likedPostsAuth = async (page = 0,size = 10,queryResult= undefined) =>{
         if(backendType === BackendType.RestAPI){
             return RestPostAPI.likedPostsAuth(page,size,context)
         }
-        const result = await sendAuth((gqlClient)=>GraphQLPostAPI.likedPostsAuth(query,gqlClient))
+        const result = await sendAuth((gqlClient)=>GraphQLPostAPI.likedPostsAuth(page,size,queryResult,gqlClient))
         return result
     }
 
-    const sharedPostsAuth = async (page = 0,size = 10,query= undefined) =>{
+    const sharedPostsAuth = async (page = 0,size = 10,queryResult= undefined) =>{
         if(backendType === BackendType.RestAPI){
             return RestPostAPI.sharedPostsAuth(page,size,context)
         }
-        const result = await sendAuth((gqlClient)=>GraphQLPostAPI.sharedPostsAuth(query,gqlClient))
+        const result = await sendAuth((gqlClient)=>GraphQLPostAPI.sharedPostsAuth(page,size,queryResult,gqlClient))
         return result
     }
     
-    const myPostsAuth = async (page = 0,size = 10,query= undefined) =>{
+    const myPostsAuth = async (page = 0,size = 10,queryResult= undefined) =>{
         if(backendType === BackendType.RestAPI){
             return RestPostAPI.myPostsAuth(page,size,context)
         }
-        const result = await sendAuth((gqlClient)=>GraphQLPostAPI.myPostsAuth(query,gqlClient))
+        const result = await sendAuth((gqlClient)=>GraphQLPostAPI.myPostsAuth(page,size,queryResult,gqlClient))
         return result
     }
 
-    const subpostsForUser = (userId,page = 0,size = 10,query= undefined) =>{
+    const subpostsForUser = (userId,page = 0,size = 10,queryResult= undefined) =>{
         if(backendType === BackendType.RestAPI){
             return RestPostAPI.subpostsForUser(userId,page,size)
         }
 
-        return GraphQLPostAPI.subpostsForUser(query)
+        return GraphQLPostAPI.subpostsForUser(userId,page,size,queryResult)
     }
 
-    const subpostsForPost = (postId,page = 0,size = 10,query= undefined) =>{
+    const subpostsForPost = (postId,page = 0,size = 10,queryResult= undefined) =>{
         if(backendType === BackendType.RestAPI){
             return RestPostAPI.subpostsForPost(postId,page,size)
         }
 
-        return GraphQLPostAPI.subpostsForPost(query)
+        return GraphQLPostAPI.subpostsForPost(postId,page,size,queryResult)
     }
 
-    const newestPosts = (tag,page = 0,size = 10,query= undefined) =>{
+    const newestPosts = (tag,page = 0,size = 10,queryResult= undefined) =>{
         if(backendType === BackendType.RestAPI){
             return RestPostAPI.newestPosts(tag,page,size)
         }
 
-        return GraphQLPostAPI.newestPosts(query)
+        return GraphQLPostAPI.newestPosts(tag,page,size,queryResult)
     }
 
-    const popularPosts = (tag,page = 0,size = 10,query= undefined) =>{
+    const popularPosts = (tag,page = 0,size = 10,queryResult= undefined) =>{
         if(backendType === BackendType.RestAPI){
             return RestPostAPI.popularPosts(tag,page,size)
         }
 
-        return GraphQLPostAPI.popularPosts(query)
+        return GraphQLPostAPI.popularPosts(tag,page,size,queryResult)
     }
 
-    const getPostByUserId = (userId,page = 0,size = 10,query= undefined) =>{
+    const getPostByUserId = (userId,page = 0,size = 10,queryResult= undefined) =>{
         if(backendType === BackendType.RestAPI){
             return RestPostAPI.getPostByUserId(userId,page,size)
         }
 
-        throw new Error("Not Implemented")
+        return GraphQLPostAPI.getPostByUserId(userId,page,size,queryResult)
     }
     
     return Object.freeze({

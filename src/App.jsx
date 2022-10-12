@@ -27,7 +27,7 @@ function App() {
             <ScrollToTop />
               <Routes>
                 <Route path={routes.Home} element={<Home />} />
-                <Route path={routes.UserById} element={<User />} />
+                {/* <Route path={routes.UserById} element={<User />} /> */}
                 <Route path={routes.UserById} element={<User />} />
                 <Route path={routes.TagByName} element={<Tag />} />
                 <Route path={routes.PostById} element={<Post/>} />

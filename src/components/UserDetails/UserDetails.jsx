@@ -20,14 +20,25 @@ const UserDetails = ({userId}) => {
     const {data,isFetching,isLoading} = useQuery(
       ["user",userId],
       async()=>{
-        const response = await getById(userId,"")
-        return response?.data ?? {}
+        const response = await getById(userId,` 
+        backgroundPhoto,
+        photo,
+        userName,
+        nick,
+        id`)
+        return response.data
       },
       {keepPreviousData:true,refetchOnWindowFocus:false})
 
 
-      const {data:followerNumber,isLoading:isLoadingFollowerNumber} = useQuery(["followerNumber",userId],()=>getNumberOfFollowers(userId))
-      const {data:followingNumber,isLoading:isLoadingFollowingNumber} = useQuery(["followingNumber",userId],()=>getNumberOfFollowing(userId))
+      const {data:followerNumber,isLoading:isLoadingFollowerNumber} = useQuery(["followerNumber",userId],async()=>{
+        const response  = await getNumberOfFollowers(userId)
+        return response.data
+      })
+      const {data:followingNumber,isLoading:isLoadingFollowingNumber} = useQuery(["followingNumber",userId],async ()=>{
+        const response = await getNumberOfFollowing(userId)
+        return response.data
+      })
 
       const handleImgError = () =>{
         if(!imgRef) {
@@ -40,7 +51,7 @@ const UserDetails = ({userId}) => {
 
   if(isFetching || isLoadingFollowerNumber || isLoadingFollowingNumber){
     return <LoadSpinner className={`spinner-position`} />
-  }   
+  } 
   return (
       <div className='user-info-wrapper'>
         <div ref={imgWrapperRef} className='user-bg-img' style={{backgroundImage:`url(rest/api/files/${data?.backgroundPhoto})`}}>
@@ -56,8 +67,12 @@ const UserDetails = ({userId}) => {
           </div> : null}
 
           <div>
-            <Link className='follows-link' to={`#`}><strong>{followerNumber?.data?.count}</strong> Obserwowanych</Link>
-            <Link style={{marginLeft: "10rem"}} className='follows-link' to={`#`}><strong>{followingNumber?.data?.count}</strong> Obserwujących</Link>
+            <Link className='follows-link' to={`#`} key={1}>
+               <strong>{followerNumber?.count ?? followerNumber}</strong> Obserwowanych 
+            </Link>
+            <Link style={{marginLeft: "10rem"}} className='follows-link' to={`#`} key={2}>
+               <strong>{followingNumber?.count ?? followingNumber }</strong> Obserwujących 
+            </Link>
           </div>
         </div>
         <div style={{marginTop: '2rem'}}>

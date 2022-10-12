@@ -58,7 +58,7 @@ const Sidebar = () => {
             name="radio"
             value={backendT}
             checked={backendType === backendT}
-            disabled={backendT === BackendType.GraphQL}
+            // disabled={backendT === BackendType.GraphQL}
             onChange={(e) => setBackendType(e.currentTarget.value)}
           >
             {backendT}

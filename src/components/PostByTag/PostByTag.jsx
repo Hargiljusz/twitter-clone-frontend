@@ -37,7 +37,28 @@ export const PopularPostByTag = ({tagName,setIsPopular}) => {
         hasNextPage,
         isFetchingNextPage,
         fetchNextPage
-    } = useInfiniteQuery(['popularPosts'], ({ pageParam = 0 }) => popularPosts(tagName,pageParam, 20, ``),
+    } = useInfiniteQuery(['popularPosts'], async ({ pageParam = 0 }) => {
+                            const result = await popularPosts(tagName,pageParam, 20, `
+                            content {
+                                id,
+                                createByUser {
+                                    backgroundPhoto,
+                                    photo,
+                                    userName,
+                                    nick,
+                                    id
+                                  },
+                                createdAt,
+                                isLiked,
+                                isShared,
+                                content,
+                                likeNumber,
+                                shareNumber
+                            },
+                            totalPageCount,
+                            pageNumber`)
+                            return result?.data ?? result.popularPostByTag
+                        },
                             {
                                 enabled: true,
                                 refetchOnWindowFocus: false,
@@ -45,7 +66,7 @@ export const PopularPostByTag = ({tagName,setIsPopular}) => {
                                 cacheTime: 10*60*1000,
                                 staleTime: 5*60*1000,
                                 getNextPageParam: (lastPage, allPage) => {
-                                    if (lastPage.data.pageNumber + 1 === lastPage.data.totalPageCount) {
+                                    if (lastPage.pageNumber + 1 === lastPage.totalPageCount) {
                                         return undefined
                                     }
                                     return allPage.length
@@ -61,7 +82,6 @@ export const PopularPostByTag = ({tagName,setIsPopular}) => {
     }, [inView])
 
 
-    
     if (isLoading) {
         return <LoadSpinner className={`spinner-position`} />
     } else {
@@ -75,7 +95,7 @@ export const PopularPostByTag = ({tagName,setIsPopular}) => {
                     data?.pages.map((group, idx) => {
                         return (
                             <Fragment key={idx}>
-                                {group?.data?.content.map((p, i) => <Post key={i} post={p} />)}
+                                {group?.content.map((p, i) => <Post key={i} post={p} />)}
                             
                             </Fragment>
                         )
@@ -105,7 +125,26 @@ export const NewestPostByTag = ({tagName,setIsPopular}) => {
         hasNextPage,
         isFetchingNextPage,
         fetchNextPage
-    } = useInfiniteQuery(['newestPosts'], ({ pageParam = 0 }) => newestPosts(tagName,pageParam, 20, ``),
+    } = useInfiniteQuery(['newestPosts'], async ({ pageParam = 0 }) => {
+                            const result = await newestPosts(tagName,pageParam, 20, `
+                            content {
+                                id,
+                                createByUser {
+                                    backgroundPhoto,
+                                    photo,
+                                    userName,
+                                    nick,
+                                    id
+                                },
+                                createdAt,
+                                isLiked,
+                                isShared,
+                                content,
+                                likeNumber,
+                                shareNumber
+                            }`)
+                            return result?.data ?? result.newestPostByTag
+                            },
                             {
                                 enabled: true,
                                 refetchOnWindowFocus: false,
@@ -113,7 +152,7 @@ export const NewestPostByTag = ({tagName,setIsPopular}) => {
                                 cacheTime: 10*60*1000,
                                 staleTime: 5*60*1000,
                                 getNextPageParam: (lastPage, allPage) => {
-                                    if (lastPage.data.pageNumber + 1 === lastPage.data.totalPageCount) {
+                                    if (lastPage.pageNumber + 1 === lastPage.totalPageCount) {
                                         return undefined
                                     }
                                     return allPage.length
@@ -142,7 +181,7 @@ export const NewestPostByTag = ({tagName,setIsPopular}) => {
                 {data?.pages.map((group, idx) => {
                         return (
                             <Fragment key={idx}>
-                                {group?.data?.content.map((p, i) => <Post key={i} post={p} />)}
+                                {group?.content.map((p, i) => <Post key={i} post={p} />)}
                             
                             </Fragment>
                         )

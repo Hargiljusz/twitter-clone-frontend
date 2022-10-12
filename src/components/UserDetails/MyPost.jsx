@@ -7,13 +7,34 @@ import { useInView } from 'react-intersection-observer';
 
 const MyPost = () => {
     const {myPostsAuth} = usePosts()
-    const {data,isLoading,isFetchingNextPage,fetchNextPage,hasNextPage} = useInfiniteQuery([["myPosts"]],({ pageParam = 0 })=>myPostsAuth(pageParam,20) ,  {
+    const {data,isLoading,isFetchingNextPage,fetchNextPage,hasNextPage} = useInfiniteQuery([["myPosts"]],async ({ pageParam = 0 })=>{
+        const result = await myPostsAuth(pageParam,20,`
+        content {
+            id,
+            createByUser {
+                backgroundPhoto,
+                photo,
+                userName,
+                nick,
+                id
+              },
+            createdAt,
+            isLiked,
+            isShared,
+            content,
+            likeNumber,
+            shareNumber
+        },
+        totalPageCount,
+        pageNumber`)
+        return result.data
+    } ,  {
       enabled: true,
       refetchOnWindowFocus: false,
       keepPreviousData:true,
       cacheTime:10*60*1000,
       getNextPageParam: (lastPage, allPage) => {
-          if (lastPage.data.pageNumber + 1 === lastPage.data.totalPageCount) {
+          if (lastPage.pageNumber + 1 === lastPage.totalPageCount) {
               return undefined
           }
           return allPage.length
@@ -39,7 +60,7 @@ const MyPost = () => {
     {data?.pages.map((group, idx) => {
                     return (
                         <Fragment key={idx}>
-                            {group?.data?.content.map((p, i) => <Post key={i} post={p} />)}
+                            {group?.content.map((p, i) => <Post key={i} post={p} />)}
                            
                         </Fragment>
                     )

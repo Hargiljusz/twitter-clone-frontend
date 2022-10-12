@@ -24,15 +24,28 @@ const Feed = ({ refresh, refreshCallback }) => {
         hasNextPage,
         isFetchingNextPage,
         fetchNextPage
-    } = useInfiniteQuery(['feed'], ({ pageParam = 0 }) => feedAuth(pageParam, 20, `
-                    content {
-                        id,
-                        createByUser,
-                        createdAt,
-                        isLiked,
-                        isShared,
-                        content
-                    }`),
+    } = useInfiniteQuery(['feed'], async ({ pageParam = 0 }) => {
+            const result = await feedAuth(pageParam, 20, `
+            content {
+                id,
+                createByUser {
+                    backgroundPhoto,
+                    photo,
+                    userName,
+                    nick,
+                    id
+                  },
+                createdAt,
+                isLiked,
+                isShared,
+                content,
+                likeNumber,
+                shareNumber
+            },
+            totalPageCount,
+            pageNumber`)
+            return result?.data ?? result.feed
+        },
         {
             enabled: true,
             refetchOnWindowFocus: false,
@@ -40,7 +53,7 @@ const Feed = ({ refresh, refreshCallback }) => {
             cacheTime: 10*60*1000,
             staleTime: 5*60*1000,
             getNextPageParam: (lastPage, allPage) => {
-                if (lastPage.data.pageNumber + 1 === lastPage.data.totalPageCount) {
+                if (lastPage.pageNumber + 1 === lastPage.totalPageCount) {
                     return undefined
                 }
                 return allPage.length
@@ -49,7 +62,6 @@ const Feed = ({ refresh, refreshCallback }) => {
     )
 //console.log("isFetching "+isFetching,"isLoading "+isLoading,"isRefetching "+isRefetching)
 
-
     useEffect(() => {
         if (inView && hasNextPage) {
             fetchNextPage()
@@ -57,7 +69,6 @@ const Feed = ({ refresh, refreshCallback }) => {
     }, [inView])
 
 
-    
     if (isLoading) {
         return <LoadSpinner className={`spinner-position`} />
     } else {
@@ -73,7 +84,7 @@ const Feed = ({ refresh, refreshCallback }) => {
                 {data?.pages.map((group, idx) => {
                     return (
                         <Fragment key={idx}>
-                            {group?.data?.content.map((p, i) => <Post key={i} post={p} />)}
+                            {group?.content.map((p, i) => <Post key={i} post={p} />)}
                            
                         </Fragment>
                     )

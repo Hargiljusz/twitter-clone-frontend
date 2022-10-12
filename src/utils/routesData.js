@@ -3,6 +3,7 @@ const routes = {
     Register:"/register",
     UserById:"/user/:id",
     TagByName:"/tag/:tagName",
-    PostById:"/post/:postId"
+    PostById:"/post/:postId",
+    Me:'/me/:id'
 }
 export default routes;

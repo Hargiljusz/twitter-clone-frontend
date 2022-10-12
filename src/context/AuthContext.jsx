@@ -170,7 +170,7 @@ const _refreshResolver = async(backendType,RestRefreshCallback,GraphQLRefreshCal
         email: refreshToken.email,
         jwt: refreshToken.jWT,
         roles: refreshToken.roles,
-        userid: refreshToken.userId,
+        userId: refreshToken.userId,
         creationDate: refreshToken.creationTime
     }; 
     return logged_user;

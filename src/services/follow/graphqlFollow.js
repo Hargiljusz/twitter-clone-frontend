@@ -5,7 +5,7 @@ import { request,gql } from 'graphql-request'
 const getNumberOfFollowers=(userId) =>{
     const query = gql`
     query{
-        followersNumber(userId: "${userId}")
+        data:followersNumber(userId: "${userId}")
       }`
 
     return request(`${prefixUrl}/graphql`,query)
@@ -14,7 +14,7 @@ const getNumberOfFollowers=(userId) =>{
 const getNumberOfFollowing=(userId) =>{
     const query = gql`
     query{
-        followingNumber(userId: "${userId}")
+      data:followingNumber(userId: "${userId}")
       }`
 
     return request(`${prefixUrl}/graphql`,query)
@@ -32,16 +32,45 @@ const getMyFollowersAuth=(query,graphQLClient) =>{
 const getMyFollowingsAuth=(query,graphQLClient) =>{
     return graphQLClient.request(`${prefixUrl}/graphql`,query)
 }
+
+const checkFollowAuth = (checkUserId,queryResult=undefined,graphQLClient)=>{
+    const query = gql`
+    query{
+        data:checkFollow(checkUserId: "${checkUserId}"){
+            ${queryResult}
+        }
+      }`
+
+    return graphQLClient.request(`${prefixUrl}/graphql`,query)
+}
 //#endregion
 
 //#region mutations
-const followAuth = (mutation,graphQLClient) =>{
+const followAuth = (followUserId,mutationResult=undefined,graphQLClient) =>{
+    const mutation = gql`
+    mutation{
+        follow(input: {followUserId: "${followUserId}"}) {
+          follow {
+            ${mutationResult}
+          }
+        }
+      }`
     return graphQLClient.request(mutation)
 }
 
-const unfollowAuth = (mutation,graphQLClient) =>{
+const unfollowAuth = (followUserId,mutationResult=undefined,graphQLClient) =>{
+  const mutation = gql`
+  mutation{
+    unfollow(input: {followUserId:"${followUserId}}) {
+      follow {
+        ${mutationResult}
+      }
+    }
+  }`
     return graphQLClient.request(mutation)
 }
+
+
 
 
 
@@ -54,6 +83,7 @@ const api = Object.freeze({
     getMyFollowersAuth,
     getMyFollowingsAuth,
     followAuth,
-    unfollowAuth
+    unfollowAuth,
+    checkFollowAuth
  });
  export default api

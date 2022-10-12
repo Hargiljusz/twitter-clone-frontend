@@ -5,7 +5,12 @@ import { request,gql } from 'graphql-request'
 const getPageableAuth = (query,graphQLClient) =>{
     return graphQLClient.request(query)
 } 
-const getById = (query) => {
+const getById = (id,queryResult) => {
+    const query = gql`
+    query{data:user (id: "${id}"){
+        ${queryResult}
+      }
+    }`
     return request(`${prefixUrl}/graphql`,query)
 }
 

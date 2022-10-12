@@ -6,8 +6,14 @@ const getPageable = (query) => {
     return request(`${prefixUrl}/graphql`,query)
 }
 
-const getById = (query) => {
-    return request(`${prefixUrl}/graphql`,query)
+const getById = (id,queryResult) => {
+    const query = gql`
+    {
+        data:post (postId: "${id}") {
+          ${queryResult}
+        }
+    }`
+    return request(`${prefixUrl}/graphql`,query) 
 }
 
 const addPostAuth = ({contetnt,createByUserId,postFor},mutationResult,graphQLClient) =>{
@@ -51,31 +57,78 @@ const feedAuth = (page,size,queryResult,graphQLClient) =>{
     return graphQLClient.request(query)
 } 
 
-const likedPostsAuth = (query,graphQLClient) =>{
+const likedPostsAuth = (page = 0,size = 10,queryResult= undefined,graphQLClient) =>{
+    const query = gql`
+        query{myLikedPosts (page: ${page},size: ${size}){
+            ${queryResult}
+        }}`
     return graphQLClient.request(query)
 } 
 
-const sharedPostsAuth = (query,graphQLClient) =>{
+const sharedPostsAuth = (page = 0,size = 10,queryResult,graphQLClient) =>{
+    const query = gql`
+        query{data:mySharedPosts (page: ${page},size: ${size}){
+            ${queryResult}
+        }}`
     return graphQLClient.request(query)
 } 
 
-const myPostsAuth = (query,graphQLClient) =>{
+const myPostsAuth = (page = 0,size = 10,queryResult,graphQLClient) =>{
+    const query = gql`
+       query {data:myPosts(page: ${page},size: ${size}){
+            ${queryResult}
+        }}`
     return graphQLClient.request(query)
 } 
 
-const subpostsForUser = (query) => {
+const subpostsForUser = (userId,page = 0,size = 10,queryResult= undefined) => {
+    const query = gql`
+    query{
+        data:subPostForUser(userId: "${userId}",page: ${page},size: ${size}) {
+          ${queryResult}
+        }
+    }`
     return request(`${prefixUrl}/graphql`,query)
 }
 
-const subpostsForPost = (query) => {
+const subpostsForPost = (postId,page = 0,size = 10,queryResult= undefined) => {
+    const query = gql`
+    query{
+        data:subpostForPost(postId: "${postId}",page: ${page},size: ${size}) {
+          ${queryResult}
+        }
+    }`
     return request(`${prefixUrl}/graphql`,query)
 }
-const newestPosts = (query) => {
+const newestPosts = (tag,page = 0,size = 10,queryResult = undefined) => {
+    const query = gql`
+    {
+        newestPostByTag(tag: "${tag}",page: ${page},size: ${size}) {
+          ${queryResult}
+        }
+    }`
     return request(`${prefixUrl}/graphql`,query)
 }
-const popularPosts = (query) => {
+
+const popularPosts = (tag,page = 0,size = 10,queryResult = undefined) => {
+    const query = gql`
+    {
+        popularPostByTag(tag: "${tag}",page: ${page},size: ${size}) {
+          ${queryResult}
+        }
+    }`
     return request(`${prefixUrl}/graphql`,query)
 }
+
+const getPostByUserId = (userId,page = 0,size = 10,queryResult= undefined) =>{
+    const query = gql`
+    query{
+        data:postByUserId(userId: "${userId}",pageSize: ${size},pageNumber: ${page})  {
+          ${queryResult}
+        }
+    }`
+    return request(`${prefixUrl}/graphql`,query)
+} 
 
 const api = Object.freeze({
     getPageable,
@@ -93,7 +146,8 @@ const api = Object.freeze({
     subpostsForUser,
     subpostsForPost,
     newestPosts,
-    popularPosts
+    popularPosts,
+    getPostByUserId
  });
 
 export default api

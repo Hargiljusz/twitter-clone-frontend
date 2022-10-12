@@ -10,11 +10,11 @@ const useUser = ()=>{
     const {sendAuth} = useGraphQlInterceptor()
 
 
-    const getById = (id,query) =>{
+    const getById = (id,queryResult = "") =>{
         if(backendType ===BackendType.RestAPI){
             return RestUserAPI.getById(id)
         }
-        return GraphQLUserAPI.getById(query)
+        return GraphQLUserAPI.getById(id,queryResult)
     }
 
     const getPageableAuth = async (page = 0,size = 10,query= undefined) =>{
