@@ -15,7 +15,7 @@ const UserDetails = ({userId}) => {
     const {getNumberOfFollowers,getNumberOfFollowing} = useFollow()
     const imgRef = useRef(null)
     const imgWrapperRef = useRef(null)
-    const {user} = useContext(AuthContext)
+    const {user,userStatus} = useContext(AuthContext)
 
     const {data,isFetching,isLoading} = useQuery(
       ["user",userId],
@@ -63,7 +63,7 @@ const UserDetails = ({userId}) => {
           <span >@{data.userName}</span>
           {userId !== user.userId ?  
           <div style={{marginTop:".5rem",marginBottom:".5rem"}}>
-            <Following siteUserId={userId} />
+            {userStatus.isLogged? <Following siteUserId={userId} />:null}
           </div> : null}
 
           <div>

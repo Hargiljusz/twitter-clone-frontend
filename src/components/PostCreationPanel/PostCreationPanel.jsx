@@ -20,7 +20,7 @@ const PostCreationPanel = ({refreshCallback,postFor = ""}) => {
             postFor:postFor,
             createByUserId: user.userId
         }
-        return addPostAuth(newPost,imagesRef.current.files,`id`)
+         addPostAuth(newPost,imagesRef.current.files,`id`)
     })
 
     useEffect(()=>{

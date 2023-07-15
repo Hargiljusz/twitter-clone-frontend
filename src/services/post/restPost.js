@@ -7,7 +7,10 @@ const getPageable = (page = 0,size = 10) => {
     return axios.get(`${prefixUrl}/api/post?pageNumber=${page}&pageSize=${size}`)
 }
 
-const getById = (id) => {
+const getByIdAuth = (id,ctx) => {
+    return jwtAxios.get(`${prefixUrl}/api/post/${id}`,{context: ctx})
+}
+const getById = (id,ctx) => {
     return axios.get(`${prefixUrl}/api/post/${id}`)
 }
 
@@ -70,6 +73,9 @@ const subpostsForUser = (userId,page = 0,size = 10) => {
 const subpostsForPost = (postId,page = 0,size = 10) => {
     return axios.get(`${prefixUrl}/api/post/subpost/${postId}?pageNumber=${page}&pageSize=${size}`)
 }
+const subpostsForPostAuth = (postId,page = 0,size = 10,ctx) => {
+    return jwtAxios.get(`${prefixUrl}/api/post/subpost/${postId}?pageNumber=${page}&pageSize=${size}`,{context:ctx})
+}
 const newestPosts = (tag,page = 0,size = 10) => {
     return axios.get(`${prefixUrl}/api/post/newest?tag=${tag}&pageNumber=${page}&pageSize=${size}`)
 }
@@ -85,6 +91,7 @@ const getPostByUserId = (userId,page = 0,size = 10)=>{
 const api = Object.freeze({
     getPageable,
     getById,
+    getByIdAuth,
     addPostAuth,
     updatePostByIdAuth,
     deletePostByIdAuth,
@@ -97,6 +104,7 @@ const api = Object.freeze({
     myPostsAuth,
     subpostsForUser,
     subpostsForPost,
+    subpostsForPostAuth,
     newestPosts,
     popularPosts,
     getPostByUserId

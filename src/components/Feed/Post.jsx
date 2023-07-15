@@ -13,7 +13,6 @@ const Post = ({post}) => {
     const {user} = useContext(AuthContext)
     const {addLikeAuth,deleteLikeByUserIdAndPostIdAuth} = useLike()
     const { addSharePostAuth,deleteSharePostByUserIdAndPostIdAuth} = useSharePost()
-
     const likeActive = localIsLiked
     const shareActive =  localIsShared
 
@@ -114,7 +113,7 @@ const Post = ({post}) => {
             <div style={{cursor:'pointer'}} onClick={(e)=>postNavigateClick(e,post.id)}>
                 {memoContent}
                     <div style={{display:"flex",flexDirection:"row",justifyContent:"center"}}>
-                        {post?.multimediaDTO?.files.map((fsrc,idx) => <img key={idx} style={{width:`${90/post?.multimediaDTO?.files.length}%`,paddingTop:".5rem"}} src={`/rest/api/files/${fsrc}`}/>)}
+                        {post?.multimediaDTO?.files.map((fsrc,idx) => <img key={idx} style={{width:`${90/post?.multimediaDTO?.files.length}%`,paddingTop:".5rem"}} src={`/rest/api/files/${fsrc}`} alt="images"/>)}
                     </div>
             </div>
                 

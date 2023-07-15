@@ -10,9 +10,10 @@ const usePost = ()=>{
     const {sendAuth} = useGraphQlInterceptor()
 
 
-    const getById = (id,queryResult) =>{
+    const getByIdAuth = (id,queryResult) =>{
         if(backendType ===BackendType.RestAPI){
-            return RestPostAPI.getById(id)
+            let isLogged = context.userStatus.isLogged
+            return isLogged ? RestPostAPI.getByIdAuth(id,context): RestPostAPI.getById(id,context) 
         }
         return GraphQLPostAPI.getById(id,queryResult)
     }
@@ -115,7 +116,8 @@ const usePost = ()=>{
 
     const subpostsForPost = (postId,page = 0,size = 10,queryResult= undefined) =>{
         if(backendType === BackendType.RestAPI){
-            return RestPostAPI.subpostsForPost(postId,page,size)
+            let isLogged = context.userStatus.isLogged
+            return isLogged ? RestPostAPI.subpostsForPostAuth(postId,page,size,context): RestPostAPI.subpostsForPost(postId,page,size) 
         }
 
         return GraphQLPostAPI.subpostsForPost(postId,page,size,queryResult)
@@ -147,7 +149,7 @@ const usePost = ()=>{
     
     return Object.freeze({
         getPageable,
-        getById,
+        getByIdAuth,
         addPostAuth,
         updatePostByIdAuth,
         deletePostByIdAuth,

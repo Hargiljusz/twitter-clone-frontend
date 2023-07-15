@@ -1,6 +1,6 @@
 import { useMemo,useState,useContext } from "react"
 import {  useParams, useLocation, useNavigate } from "react-router-dom"
-import { useQuery,useMutation } from "@tanstack/react-query"
+import { useQuery,useQueryClient } from "@tanstack/react-query"
 import usePost from "../hooks/postHook"
 import LoaddingSpinner from '../assets/LoadSpinner/LoadSpinner'
 import {highlighText} from './Feed/Post'
@@ -12,11 +12,14 @@ import AuthContext from "../context/AuthContext"
 import PostCreationPanel from '../components/PostCreationPanel/PostCreationPanel'
 import SubpostsWrapper from './SubpostsWrapper'
 
+
 const PostDetails = () => {
     //#region init data
+    const queryClient = useQueryClient()
     const {postId} = useParams()
-    const {getById} = usePost()
-    const {isLoading,data} = useQuery(["postDetails",postId],()=>getById(postId,`
+    const {user,userStatus} = useContext(AuthContext)
+    const {getByIdAuth} = usePost()
+    const {isLoading,data} = useQuery(["postDetails",postId],()=>getByIdAuth(postId,`
     id,
     createByUser {
         backgroundPhoto,
@@ -26,47 +29,46 @@ const PostDetails = () => {
         id
       },
     createdAt,
-    isLiked,
-    isShared,
+    ${userStatus.isLogged?"isLiked,":""}
+    ${userStatus.isLogged?"isShared,":""}
     content,
     likeNumber,
     shareNumber`),{refetchOnWindowFocus:false}) 
-    const {state:{isLiked,isShared}} = useLocation()
-    const navigate = useNavigate()
-    const [localIsLiked,setLocalIsLiked] = useState(isLiked)
-    const [localIsShared,setLocalIsShared] = useState(isShared)
+    const isLiked = data?.data?.isLiked
+    const isShared = data?.data?.isShared
+    
     const {addLikeAuth,deleteLikeByUserIdAndPostIdAuth} = useLike()
     const {addSharePostAuth,deleteSharePostByUserIdAndPostIdAuth} = useSharePost()
-    const likeActive = localIsLiked
-    const shareActive =  localIsShared
     const [showCommentTextArea,setShowCommentTextArea] = useState(false)
     const [refreshSubPosts,setRefreshSubposts] = useState(false)
-    const {user} = useContext(AuthContext)
+    
     //#endregion
 
     
     //#region utils
     const likeHandle = async (event,postId)=>{
         event.preventDefault()
-        setLocalIsLiked(prev=>!prev)
-        if(!likeActive){
+        if(!isLiked){
            await addLikeAuth({userId:user.userId,postFor: postId})
+           queryClient.invalidateQueries(["postDetails",postId])
            return
         }
         await deleteLikeByUserIdAndPostIdAuth({userId:user.userId,postFor: postId})
+        queryClient.invalidateQueries(["postDetails",postId])
     }
 
     const shareHandle = async (event,postId)=>{
         event.preventDefault()
-        setLocalIsShared(prev=>!prev)
-        if(!shareActive){
+        if(!isShared){
             await addSharePostAuth({
                 postFor: postId,
                 sharedByUserId: user.userId
               })
+              queryClient.invalidateQueries(["postDetails",postId])
               return
         }
         await deleteSharePostByUserIdAndPostIdAuth({postFor: postId,sharedByUserId:user.userId})
+        queryClient.invalidateQueries(["postDetails",postId])
     }
 
     const tagHandleClick = (e,tagName) =>{
@@ -84,43 +86,7 @@ const PostDetails = () => {
         navigate(`/user/${userId}`)
     }
     
-    const _computeLikeNumber = () =>{
-        if(isLiked && localIsLiked){
-            return data?.data?.likeNumber
-        }
-
-        if(isLiked && !localIsLiked){
-            return data?.data?.likeNumber - 1
-        }
-        
-        if(!isLiked && localIsLiked){
-            return data?.data?.likeNumber + 1
-        }
-        if(!isLiked && !localIsLiked){
-            return data?.data?.likeNumber
-        }
-    }
-
-    const _computeShareNumber = () =>{
-        if(isShared && localIsShared){
-            return data?.data?.shareNumber
-        }
-
-        if(isShared && !localIsShared){
-            return data?.data?.shareNumber - 1
-        }
-        
-        if(!isShared && localIsShared){
-            return data?.data?.shareNumber + 1
-        }
-        if(!isShared && !localIsShared){
-            return data?.data?.shareNumber
-        }
-    }
-
     const memoContent = useMemo(()=>highlighText(data?.data?.content ,/\#\w+/g,tagHandleClick),[data])
-    const likeNumber = _computeLikeNumber()
-    const shareNumber = _computeShareNumber()
 
     //#endregion
 
@@ -149,12 +115,12 @@ const PostDetails = () => {
                             <BiComment className={`icon ${showCommentTextArea ? "active": ""}`} onClick={()=>setShowCommentTextArea(prev=>!prev)} />
                         </div>
                         <div className='fotter-items'>
-                            <BiLike className={`icon ${likeActive ? "active": ""}`} onClick={(e)=>likeHandle(e,data?.data?.id)}></BiLike>
-                            <span>{likeNumber}</span>
+                            {userStatus.isLogged?<BiLike className={`icon ${isLiked ? "active": ""}`} onClick={(e)=>likeHandle(e,data?.data?.id)}></BiLike>:<BiLike className={`icon`} ></BiLike>}
+                            <span>{data?.data?.likeNumber}</span>
                         </div>
                         <div className='fotter-items'>
-                            <BiShare className={`icon ${shareActive ? "active": ""}`} style={{transform: "scaleX(-1)"}} onClick={(e)=>shareHandle(e,data?.data?.id)}></BiShare>
-                            <span> {shareNumber}</span>
+                        {userStatus.isLogged? <BiShare className={`icon ${isShared ? "active": ""}`} style={{transform: "scaleX(-1)"}} onClick={(e)=>shareHandle(e,data?.data?.id)}></BiShare>:<BiShare className={`icon`} ></BiShare>}
+                            <span> {data?.data?.shareNumber}</span>
                         </div>
                     </div>
             </div>
