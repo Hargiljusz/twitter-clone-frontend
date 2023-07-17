@@ -91,8 +91,9 @@ const AutoComBox = ({tagData,userData,searachInputRef}) => {
 }
 
 const AutoComBoxTag = ({tag}) => {
+  //navigate(`/tag/${tagName}`)
   return (
-    <li >{"#"+tag.name}</li>
+    <Link to={`/tag/${tag.name}`} style={{textDecoration: "none"}}><li>{"#"+tag.name}</li></Link>
   )
 }
 

@@ -54,8 +54,8 @@ const UserDetails = ({userId}) => {
   } 
   return (
       <div className='user-info-wrapper'>
-        <div ref={imgWrapperRef} className='user-bg-img' style={{backgroundImage:`url(rest/api/files/${data?.backgroundPhoto})`}}>
-          <img src={`rest/api/files/${data?.backgroundPhoto}`} onError={handleImgError} ref={imgRef} style={{width:"100%",height:"100%", visibility:"hidden"}} onClick={()=>console.log(imgRef.current.src)}/> 
+        <div ref={imgWrapperRef} className='user-bg-img' style={{backgroundImage:`url(/rest/api/files/${data?.backgroundPhoto})`}}>
+          <img src={`/rest/api/files/${data?.backgroundPhoto}`} onError={handleImgError} ref={imgRef} style={{width:"100%",height:"100%", visibility:"hidden"}} onClick={()=>console.log(imgRef.current.src)}/> 
         </div>
         <img className='avatar'  src={`/rest/api/files/${data.photo.replace('\\','/')}`} alt='img'  />
         <div id='user-info'>

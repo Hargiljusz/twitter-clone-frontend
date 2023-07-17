@@ -1,5 +1,5 @@
 import { useMemo,useState,useContext } from "react"
-import {  useParams, useLocation, useNavigate } from "react-router-dom"
+import {  useParams } from "react-router-dom"
 import { useQuery,useQueryClient } from "@tanstack/react-query"
 import usePost from "../hooks/postHook"
 import LoaddingSpinner from '../assets/LoadSpinner/LoadSpinner'
