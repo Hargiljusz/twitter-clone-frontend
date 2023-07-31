@@ -113,7 +113,7 @@ const Post = ({post}) => {
             <div style={{cursor:'pointer'}} onClick={(e)=>postNavigateClick(e,post.id)}>
                 {memoContent}
                     <div style={{display:"flex",flexDirection:"row",justifyContent:"center"}}>
-                        {post?.multimediaDTO?.files.map((fsrc,idx) => <img key={idx} style={{width:`${90/post?.multimediaDTO?.files.length}%`,paddingTop:".5rem"}} src={`/rest/api/files/${fsrc}`} alt="images"/>)}
+                        {post?.multimediaDTO?.files.map((fsrc,idx) => <img key={idx} style={{width:`${90/post?.multimediaDTO?.files.length}%`,paddingTop:".5rem"}} loading={"lazy"} src={`/rest/api/files/${fsrc}`} alt="images"/>)}
                     </div>
             </div>
                 
@@ -145,7 +145,7 @@ export const highlighText = (text,regex,handleClick) =>{
       return(
         <div>
             {splitedText.map((text,idx) => {
-                if(idx < matchedWords.length){
+                if(idx < matchedWords?.length ?? 0){
                     return <span key={idx}>
                             <span>{text}</span>
                             <span className='tag' onClick={(e)=>handleClick(e,matchedWords[idx].substring(1))}>{matchedWords[idx]}</span>

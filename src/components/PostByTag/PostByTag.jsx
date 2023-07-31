@@ -7,7 +7,7 @@ import Post from '../Feed/Post'
 import '../Feed/Feed.css'
 import './PostByTag.css'
 
-const PostByTag = ({tagName}) => {
+export const PostByTag = ({tagName}) => {
     const [isPopular, setIsPopular] = useState(true)
 
     return(

@@ -8,10 +8,12 @@ import AuthContext from "../context/AuthContext"
 import LoginModal from "../components/LoginModal"
 import { BackendType } from "../context/AuthContext"
 import { ButtonGroup,ToggleButton } from "react-bootstrap"
+import { useQueryClient } from "@tanstack/react-query"
 
 const Sidebar = () => {
 
   const {userStatus,user,logout,backendType,setBackendType} = useContext(AuthContext)
+  const queryClient = useQueryClient()
   
   return (
     <div className="Sidebar">
@@ -34,7 +36,11 @@ const Sidebar = () => {
         </Link>:null}
 
         {userStatus.isLogged ?
-        <Link to="#" onClick={()=>logout()}>
+        <Link to={routes.Home} onClick={()=>{
+
+            queryClient.clear()
+            logout()
+          }}>
           <li className="SidebarRow">
               <FiLogIn className="Icon" style = {{transform: 'rotate(180deg)' }}></FiLogIn>
               <div className="Title">Logout</div>

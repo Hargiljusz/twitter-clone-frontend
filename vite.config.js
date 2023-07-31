@@ -7,13 +7,13 @@ export default defineConfig({
   server:{
     proxy:{
       "/rest":{
-        target: "http://localhost:5000/",
+        target: "http://localhost:8080/rest/",
         secure: false,
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/rest\//, ''),
       } ,
       "/graphql":{
-        target: "http://localhost:5001/",
+        target: "http://localhost:8080/graphql/",
         secure: false,
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/graphql\//, ''),

@@ -40,7 +40,10 @@ const Feed = ({ refresh, refreshCallback }) => {
                 isShared,
                 content,
                 likeNumber,
-                shareNumber
+                shareNumber,
+                multimediaDTO {
+                    files
+                  }
             },
             totalPageCount,
             pageNumber`)
