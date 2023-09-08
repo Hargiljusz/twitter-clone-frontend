@@ -44,12 +44,12 @@ const useLike = ()=>{
         return GraphQLLikeAPI.numberOfLikes(postId)
     }
 
-    const addLikeAuth = async(Like = {userId :"", postFor: ""},query=undefined)=>{
+    const addLikeAuth = async(Like = {userId :"", postFor: ""},mutationResult=undefined)=>{
         if(backendType === BackendType.RestAPI){
             return RestLikeAPI.addLikeAuth(Like,context)
         }
 
-        const result = await sendAuth((gqlClient)=>GraphQLLikeAPI.addLikeAuth(query,gqlClient))
+        const result = await sendAuth((gqlClient)=>GraphQLLikeAPI.addLikeAuth(Like.userId,Like.postFor,mutationResult,gqlClient))
         return result
     }
 
@@ -70,12 +70,12 @@ const useLike = ()=>{
         return result
     }
 
-    const deleteLikeByUserIdAndPostIdAuth = async(like = {userId :"", postFor: ""},queryResult=undefined)=>{
+    const deleteLikeByUserIdAndPostIdAuth = async(like = {userId :"", postFor: ""},mutationResult=undefined)=>{
         if(backendType === BackendType.RestAPI){
             return RestLikeAPI.deleteLikeByUserIdAndPostIdAuth(like,context)
         }
 
-        const result = await sendAuth((gqlClient)=>GraphQLLikeAPI.deleteLikeByUserIdAndPostIdAuth(queryResult,gqlClient))
+        const result = await sendAuth((gqlClient)=>GraphQLLikeAPI.deleteLikeByUserIdAndPostIdAuth(like.userId,like.postFor,mutationResult,gqlClient))
         return result
     }
 

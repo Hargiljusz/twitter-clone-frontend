@@ -79,12 +79,21 @@ const subpostsForPostAuth = (postId,page = 0,size = 10,ctx) => {
 const newestPosts = (tag,page = 0,size = 10) => {
     return axios.get(`${prefixUrl}/api/post/newest?tag=${tag}&pageNumber=${page}&pageSize=${size}`)
 }
+const newestPostsAuth = (tag,page = 0,size = 10,ctx) => {
+    return jwtAxios.get(`${prefixUrl}/api/post/newest?tag=${tag}&pageNumber=${page}&pageSize=${size}`,{context: ctx})
+}
 const popularPosts = (tag,page = 0,size = 10) => {
     return axios.get(`${prefixUrl}/api/post/popular?tag=${tag}&pageNumber=${page}&pageSize=${size}`)
+}
+const popularPostsAuth = (tag,page = 0,size = 10,ctx) => {
+    return jwtAxios.get(`${prefixUrl}/api/post/popular?tag=${tag}&pageNumber=${page}&pageSize=${size}`,{context: ctx})
 }
 
 const getPostByUserId = (userId,page = 0,size = 10)=>{
     return axios.get(`${prefixUrl}/api/post/user/${userId}?pageNumber=${page}&pageSize=${size}`)
+}
+const getPostByUserIdAuth = (userId,page = 0,size = 10,ctx)=>{
+    return jwtAxios.get(`${prefixUrl}/api/post/user/${userId}?pageNumber=${page}&pageSize=${size}`,{context: ctx})
 }
 
 
@@ -106,8 +115,11 @@ const api = Object.freeze({
     subpostsForPost,
     subpostsForPostAuth,
     newestPosts,
+    newestPostsAuth,
     popularPosts,
-    getPostByUserId
+    popularPostsAuth,
+    getPostByUserId,
+    getPostByUserIdAuth
  });
 
 export default api

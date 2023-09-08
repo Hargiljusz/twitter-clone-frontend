@@ -10,7 +10,7 @@ COPY src/ src/
 RUN npm ci
 RUN npm run build
 
-FROM nginx:1.25.1-alpine as PROD
+FROM nginx:1.25.1 as PROD
 COPY nginx-conf/default.conf /etc/nginx/conf.d/default.conf
 COPY --from=Builder /app/dist /usr/share/nginx/html
 

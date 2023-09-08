@@ -4,7 +4,7 @@ import useFollow from '../../hooks/followHook'
 import { useQuery } from '@tanstack/react-query'
 import LoadSpinner from "../../assets/LoadSpinner/LoadSpinner"
 import UserTabs from './UserTabs'
-import AuthContext from '../../context/AuthContext'
+import AuthContext,{BackendType} from '../../context/AuthContext'
 import Following from './Following'
 import { Link } from 'react-router-dom'
 import SiteUserPosts from "./SiteUserPosts"
@@ -15,7 +15,7 @@ const UserDetails = ({userId}) => {
     const {getNumberOfFollowers,getNumberOfFollowing} = useFollow()
     const imgRef = useRef(null)
     const imgWrapperRef = useRef(null)
-    const {user,userStatus} = useContext(AuthContext)
+    const {user,userStatus,backendType} = useContext(AuthContext)
 
     const {data,isFetching,isLoading} = useQuery(
       ["user",userId],
@@ -48,14 +48,14 @@ const UserDetails = ({userId}) => {
         imgRef.current.src = `/bgPhoto.png`
         imgWrapperRef.current.style.backgroundImage = `url(/bgPhoto.png)`
       }
-
+      const backedFileURL = backendType === BackendType.RestAPI ? "/rest/api/files" : "/graphql/api/files"
   if(isFetching || isLoadingFollowerNumber || isLoadingFollowingNumber){
     return <LoadSpinner className={`spinner-position`} />
   } 
   return (
       <div className='user-info-wrapper'>
         <div ref={imgWrapperRef} className='user-bg-img' style={{backgroundImage:`url(/rest/api/files/${data?.backgroundPhoto})`}}>
-          <img src={`/rest/api/files/${data?.backgroundPhoto}`} onError={handleImgError} ref={imgRef} style={{width:"100%",height:"100%", visibility:"hidden"}} onClick={()=>console.log(imgRef.current.src)}/> 
+          <img src={`${backedFileURL}/${data?.backgroundPhoto}`} onError={handleImgError} ref={imgRef} style={{width:"100%",height:"100%", visibility:"hidden"}} onClick={()=>console.log(imgRef.current.src)}/> 
         </div>
         <img className='avatar'  src={`/rest/api/files/${data.photo.replace('\\','/')}`} alt='img'  />
         <div id='user-info'>

@@ -26,7 +26,13 @@ const getMyLikesAuth = (query,graphQLClient)=>{
 //#endregion
 
 //#region mutations
-const addLikeAuth = (mutation,graphQLClient) =>{
+const addLikeAuth = (userId,postFor,mutationResult,graphQLClient) =>{
+    const mutation = gql`
+    mutation{
+        addLike(input: {likedByUserId:"${userId}",postFor:"${postFor}"}) {
+          ${mutationResult}
+        }
+      }`
     return graphQLClient.request(mutation)
 }
 
@@ -39,8 +45,14 @@ const deleteLikeByIdAuth = (mutation,graphQLClient) =>{
     return graphQLClient.request(mutation)
 }
 
-const deleteLikeByUserIdAndPostIdAuth = (queryResult,gqlClient) => {
-    throw new Error("Not Implemented")
+const deleteLikeByUserIdAndPostIdAuth = (userId,postId,mutationResult,gqlClient) => {
+    const mutation = gql`
+    mutation{
+        deleteLike(postId: "${postId}",userId: "${userId}"){
+          ${mutationResult}
+        }
+      }`
+      return gqlClient.request(mutation)
 }
 
 //#endregion

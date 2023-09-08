@@ -48,12 +48,12 @@ const useSharePost = ()=>{
     const addSharePostAuth = async(sharePost = {
         postFor: "postId",
         sharedByUserId: "userId"
-      },query=undefined)=>{
+      },mutationResult=undefined)=>{
         if(backendType === BackendType.RestAPI){
             return RestSharePostAPI.addSharePostAuth(sharePost,context)
         }
 
-        const result = await sendAuth((gqlClient)=>GraphQLSharePostAPI.addSharePostAuth(query,gqlClient))
+        const result = await sendAuth((gqlClient)=>GraphQLSharePostAPI.addSharePostAuth(sharePost,mutationResult,gqlClient))
         return result
     }
 
@@ -76,12 +76,12 @@ const useSharePost = ()=>{
     const deleteSharePostByUserIdAndPostIdAuth =  async(sharePost = {
         postFor: "postId",
         sharedByUserId: "userId"
-      },queryResult=undefined) =>{
+      },mutationResult=undefined) =>{
         if(backendType === BackendType.RestAPI){
             return RestSharePostAPI.deleteSharePostByUserIdAndPostIdAuth(sharePost,context)
         }
 
-        const result = await sendAuth((gqlClient)=>GraphQLSharePostAPI.deleteSharePostByUserIdAndPostIdAuth(queryResult,gqlClient))
+        const result = await sendAuth((gqlClient)=>GraphQLSharePostAPI.deleteSharePostByUserIdAndPostIdAuth(sharePost,mutationResult,gqlClient))
         return result
     }
 

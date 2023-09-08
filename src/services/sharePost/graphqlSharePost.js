@@ -26,7 +26,13 @@ const getMySharePostsAuth = (query,graphQLClient)=>{
 //#endregion
 
 //#region mutations
-const addSharePostAuth = (mutation,graphQLClient) =>{
+const addSharePostAuth = (sharePost,mutationResult,graphQLClient) =>{
+    const mutation = gql`
+    mutation{
+        addSharePost(input: {postFor:"${sharePost.postFor}",sharedByUserId:"${sharePost.sharedByUserId}"}) {
+          ${mutationResult}
+        }
+      }`
     return graphQLClient.request(mutation)
 }
 
@@ -39,8 +45,15 @@ const deleteSharePostByIdAuth = (mutation,graphQLClient) =>{
     return graphQLClient.request(mutation)
 }
 
-const deleteSharePostByUserIdAndPostIdAuth = (queryResult,gqlClient) =>{
-    throw new Error("Not Implemented")
+const deleteSharePostByUserIdAndPostIdAuth = (sharePost,mutationResult,gqlClient) =>{
+    const mutation = gql`
+    mutation{
+        deleteSharePost(postId: "${sharePost.postFor}",userId: "${sharePost.sharedByUserId}"){
+          ${mutationResult}
+        }
+      }`
+
+      return gqlClient.request(mutation)
 }
 //#endregion
 

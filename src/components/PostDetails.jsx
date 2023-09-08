@@ -1,14 +1,16 @@
 import { useMemo,useState,useContext } from "react"
-import {  useParams } from "react-router-dom"
+import {  useParams, useNavigate } from "react-router-dom"
 import { useQuery,useQueryClient } from "@tanstack/react-query"
 import usePost from "../hooks/postHook"
 import LoaddingSpinner from '../assets/LoadSpinner/LoadSpinner'
 import {highlighText} from './Feed/Post'
 import {BiLike,BiShare,BiComment} from "react-icons/bi"
+import {MdDeleteOutline} from 'react-icons/md'
 import useLike from "../hooks/likeHook"
 import useSharePost from "../hooks/sharePostHook"
 import './Feed/Feed.css'
 import AuthContext from "../context/AuthContext"
+import { BackendType } from "../context/AuthContext"
 import PostCreationPanel from '../components/PostCreationPanel/PostCreationPanel'
 import SubpostsWrapper from './SubpostsWrapper'
 
@@ -16,9 +18,10 @@ import SubpostsWrapper from './SubpostsWrapper'
 const PostDetails = () => {
     //#region init data
     const queryClient = useQueryClient()
+    const navigate = useNavigate()
     const {postId} = useParams()
-    const {user,userStatus} = useContext(AuthContext)
-    const {getByIdAuth} = usePost()
+    const {user,userStatus,backendType} = useContext(AuthContext)
+    const {getByIdAuth,deletePostByIdAuth} = usePost()
     const {isLoading,data} = useQuery(["postDetails",postId],()=>getByIdAuth(postId,`
     id,
     createByUser {
@@ -32,16 +35,18 @@ const PostDetails = () => {
     ${userStatus.isLogged?"isLiked,":""}
     ${userStatus.isLogged?"isShared,":""}
     content,
+    multimediaDTO {
+        files
+      },
     likeNumber,
     shareNumber`),{refetchOnWindowFocus:false}) 
     const isLiked = data?.data?.isLiked
     const isShared = data?.data?.isShared
-    
     const {addLikeAuth,deleteLikeByUserIdAndPostIdAuth} = useLike()
     const {addSharePostAuth,deleteSharePostByUserIdAndPostIdAuth} = useSharePost()
     const [showCommentTextArea,setShowCommentTextArea] = useState(false)
     const [refreshSubPosts,setRefreshSubposts] = useState(false)
-    
+    const postIsMine = userStatus.isLogged && user.userId === data?.data?.createByUser?.id
     //#endregion
 
     
@@ -49,12 +54,15 @@ const PostDetails = () => {
     const likeHandle = async (event,postId)=>{
         event.preventDefault()
         if(!isLiked){
-           await addLikeAuth({userId:user.userId,postFor: postId})
+           await addLikeAuth({userId:user.userId,postFor: postId},"id")
            queryClient.invalidateQueries(["postDetails",postId])
+           queryClient.resetQueries(["feed"])
            return
         }
-        await deleteLikeByUserIdAndPostIdAuth({userId:user.userId,postFor: postId})
+        await deleteLikeByUserIdAndPostIdAuth({userId:user.userId,postFor: postId},"statusResult")
         queryClient.invalidateQueries(["postDetails",postId])
+        await queryClient.resetQueries(["feed"])
+        return
     }
 
     const shareHandle = async (event,postId)=>{
@@ -63,12 +71,15 @@ const PostDetails = () => {
             await addSharePostAuth({
                 postFor: postId,
                 sharedByUserId: user.userId
-              })
+              },"id")
               queryClient.invalidateQueries(["postDetails",postId])
+              await queryClient.resetQueries(["feed"])
               return
         }
-        await deleteSharePostByUserIdAndPostIdAuth({postFor: postId,sharedByUserId:user.userId})
+        await deleteSharePostByUserIdAndPostIdAuth({postFor: postId,sharedByUserId:user.userId},"statusResult")
         queryClient.invalidateQueries(["postDetails",postId])
+        await queryClient.resetQueries(["feed"])
+        return
     }
 
     const tagHandleClick = (e,tagName) =>{
@@ -85,28 +96,40 @@ const PostDetails = () => {
     const navigateToUser = (userId) =>{
         navigate(`/user/${userId}`)
     }
+
+    const deletePost= async()=>{
+        alert("Do you want to delete this post?")
+        //delete post
+        const result = await deletePostByIdAuth(data?.data?.id,"statusResult")
+        //clear feed
+        queryClient.removeQueries(["postDetails",postId])
+        await queryClient.invalidateQueries(["feed"])
+        console.log("deleted post")
+        navigate(`/`)
+    }
     
     const memoContent = useMemo(()=>highlighText(data?.data?.content ,/\#\w+/g,tagHandleClick),[data])
 
+    const backedFileURL = backendType === BackendType.RestAPI ? "/rest/api/files" : "/graphql/api/files"
     //#endregion
-
     if(isLoading){
         return < LoaddingSpinner />
     }
   return (
     <>
         <div className='post-wrapper' style={{paddingTop:"3.5rem"}} >
-            <img className='post-author-img' alt='img' src={`/rest/api/files/${data?.data?.createByUser.photo.replace('\\','/')}`} onClick={()=>navigateToUser(data?.data?.createByUser.id)} />
+            <img className='post-author-img' alt='img' src={`${backedFileURL}/${data?.data?.createByUser.photo.replace('\\','/')}`} onClick={()=>navigateToUser(data?.data?.createByUser.id)} />
             <div className='custom-post'>
                 <div className='post-header'>
                     <span className='nick' onClick={()=>navigateToUser(data?.data?.createByUser.id)}>{data?.data?.createByUser.nick}</span>
                     <span className='userName' onClick={()=>navigateToUser(data?.data?.createByUser.id)}>@{data?.data?.createByUser.userName}</span>
                     <span className='date'>{formatDate(data?.data?.createdAt).join(" ")}</span>
+                    <MdDeleteOutline className="icon" style={{marginLeft:"auto", transform:"scale(0.9)"}}  onClick={()=>deletePost()}/>
                 </div>
-                <div>
+            <div>
                 {memoContent}
                     <div style={{display:"flex",flexDirection:"row",justifyContent:"center"}}>
-                        {data?.data?.multimediaDTO?.files.map((fsrc,idx) => <img key={idx} style={{width:`${90/data?.data?.multimediaDTO?.files.length}%`,paddingTop:".5rem"}} src={`/rest/api/files/${fsrc}`}/>)}
+                        {data?.data?.multimediaDTO?.files.map((fsrc,idx) => <img key={idx} style={{width:`${90/data?.data?.multimediaDTO?.files.length}%`,paddingTop:".5rem"}} src={`${backedFileURL}/${fsrc}`}/>)}
                     </div>
                 </div>
                     

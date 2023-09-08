@@ -2,7 +2,7 @@ import { useInfiniteQuery } from '@tanstack/react-query'
 import usePost from '../../hooks/postHook'
 import React, {useEffect, Fragment } from 'react'
 import { useInView } from 'react-intersection-observer';
-import { Alert } from 'react-bootstrap'
+import { Alert, Fade } from 'react-bootstrap'
 import { Link } from 'react-router-dom'
 import LoadSpinner from "../../assets/LoadSpinner/LoadSpinner"
 import Post from './Post';
@@ -52,7 +52,8 @@ const Feed = ({ refresh, refreshCallback }) => {
         {
             enabled: true,
             refetchOnWindowFocus: false,
-            keepPreviousData:true,
+            keepPreviousData:false,
+            refetchOnMount:true,
             cacheTime: 10*60*1000,
             staleTime: 5*60*1000,
             getNextPageParam: (lastPage, allPage) => {

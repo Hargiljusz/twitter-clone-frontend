@@ -11,11 +11,11 @@ const usePost = ()=>{
 
 
     const getByIdAuth = (id,queryResult) =>{
+        let isLogged = context.userStatus.isLogged
         if(backendType ===BackendType.RestAPI){
-            let isLogged = context.userStatus.isLogged
             return isLogged ? RestPostAPI.getByIdAuth(id,context): RestPostAPI.getById(id,context) 
         }
-        return GraphQLPostAPI.getById(id,queryResult)
+        return !isLogged ? GraphQLPostAPI.getById(id,queryResult): sendAuth((gqlClient)=>GraphQLPostAPI.getByIdAuth(id,queryResult,gqlClient))
     }
 
     const getPageable = (page = 0,size = 10,query= undefined) =>{
@@ -30,7 +30,11 @@ const usePost = ()=>{
         if(backendType === BackendType.RestAPI){
             return RestPostAPI.addPostAuth({contetnt,createByUserId,postFor},files,context)
         }
-        const result = await sendAuth((gqlClient)=>GraphQLPostAPI.addPostAuth({contetnt,createByUserId,postFor},mutationResult,gqlClient))
+        if(files.length === 0){
+            const result = await sendAuth((gqlClient)=>GraphQLPostAPI.addPostAuth({contetnt,createByUserId,postFor},mutationResult,gqlClient))
+            return result
+        }
+        const result = await sendAuth((gqlClient)=>GraphQLPostAPI.addPostAuthWithFile({contetnt,createByUserId,postFor},files,mutationResult,gqlClient))
         return result
     }
 
@@ -42,11 +46,11 @@ const usePost = ()=>{
         return result
     }
     
-    const deletePostByIdAuth = async (id,mutation = undefined) =>{
+    const deletePostByIdAuth = async (id,mutationResult = undefined) =>{
         if(backendType === BackendType.RestAPI){
             return RestPostAPI.deletePostByIdAuth(id,context)
         }
-        const result = await sendAuth((gqlClient)=>GraphQLPostAPI.deletePostByIdAuth(mutation,gqlClient))
+        const result = await sendAuth((gqlClient)=>GraphQLPostAPI.deletePostByIdAuth(id,mutationResult,gqlClient))
         return result
     }
 
@@ -115,36 +119,39 @@ const usePost = ()=>{
     }
 
     const subpostsForPost = (postId,page = 0,size = 10,queryResult= undefined) =>{
+        let isLogged = context.userStatus.isLogged
         if(backendType === BackendType.RestAPI){
-            let isLogged = context.userStatus.isLogged
             return isLogged ? RestPostAPI.subpostsForPostAuth(postId,page,size,context): RestPostAPI.subpostsForPost(postId,page,size) 
         }
 
-        return GraphQLPostAPI.subpostsForPost(postId,page,size,queryResult)
+        return !isLogged ? GraphQLPostAPI.subpostsForPost(postId,page,size,queryResult): sendAuth((gqlClient)=>GraphQLPostAPI.subpostsForPostAuth(postId,page,size,queryResult,gqlClient))
     }
 
     const newestPosts = (tag,page = 0,size = 10,queryResult= undefined) =>{
+        let isLogged = context.userStatus.isLogged
         if(backendType === BackendType.RestAPI){
-            return RestPostAPI.newestPosts(tag,page,size)
+            return !isLogged ? RestPostAPI.newestPosts(tag,page,size) : RestPostAPI.newestPostsAuth(tag,page,size,context)
         }
 
-        return GraphQLPostAPI.newestPosts(tag,page,size,queryResult)
+        return !isLogged ?  GraphQLPostAPI.newestPosts(tag,page,size,queryResult): sendAuth((gqlClient)=>GraphQLPostAPI.newestPostsAuth(tag,page,size,queryResult,gqlClient))
     }
 
     const popularPosts = (tag,page = 0,size = 10,queryResult= undefined) =>{
+        let isLogged = context.userStatus.isLogged
         if(backendType === BackendType.RestAPI){
-            return RestPostAPI.popularPosts(tag,page,size)
+            return !isLogged ? RestPostAPI.popularPosts(tag,page,size) : RestPostAPI.popularPostsAuth(tag,page,size,context)
         }
 
-        return GraphQLPostAPI.popularPosts(tag,page,size,queryResult)
+        return !isLogged ? GraphQLPostAPI.popularPosts(tag,page,size,queryResult) : sendAuth((gqlClient)=>GraphQLPostAPI.popularPostsAuth(tag,page,size,queryResult,gqlClient))
     }
 
     const getPostByUserId = (userId,page = 0,size = 10,queryResult= undefined) =>{
+        let isLogged = context.userStatus.isLogged
         if(backendType === BackendType.RestAPI){
-            return RestPostAPI.getPostByUserId(userId,page,size)
+            return  !isLogged ? RestPostAPI.getPostByUserId(userId,page,size): RestPostAPI.getPostByUserIdAuth(userId,page,size,context)
         }
 
-        return GraphQLPostAPI.getPostByUserId(userId,page,size,queryResult)
+        return !isLogged ? GraphQLPostAPI.getPostByUserId(userId,page,size,queryResult) : sendAuth((gqlClient)=>GraphQLPostAPI.getPostByUserIdAuth(userId,page,size,queryResult,gqlClient)) 
     }
     
     return Object.freeze({

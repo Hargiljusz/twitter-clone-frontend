@@ -1,8 +1,9 @@
 
 import useLike  from "../../hooks/likeHook"
 import useSharePost from "../../hooks/sharePostHook"
-import React,{ useState, useContext,useMemo,useEffect, Fragment } from 'react'
+import React,{ useState, useContext,useMemo } from 'react'
 import AuthContext from '../../context/AuthContext'
+import { BackendType } from "../../context/AuthContext"
 import {BiLike,BiShare} from "react-icons/bi"
 import {useNavigate } from 'react-router-dom'
 import "./Feed.css"
@@ -10,7 +11,7 @@ import "./Feed.css"
 const Post = ({post}) => {
     const [localIsLiked,setLocalIsLiked] = useState(post.isLiked) // derrived state - anti pattern
     const [localIsShared,setLocalIsShared] = useState(post.isShared)// derrived state - anti pattern
-    const {user} = useContext(AuthContext)
+    const {user,backendType} = useContext(AuthContext)
     const {addLikeAuth,deleteLikeByUserIdAndPostIdAuth} = useLike()
     const { addSharePostAuth,deleteSharePostByUserIdAndPostIdAuth} = useSharePost()
     const likeActive = localIsLiked
@@ -22,10 +23,13 @@ const Post = ({post}) => {
         event.preventDefault()
         setLocalIsLiked(prev=>!prev)
         if(!likeActive){
-           await addLikeAuth({userId:user.userId,postFor: postId})
+           await addLikeAuth({userId:user.userId,postFor: postId},"id")
+           await queryClient.resetQueries(["feed"])
            return
         }
-        await deleteLikeByUserIdAndPostIdAuth({userId:user.userId,postFor: postId})
+        await deleteLikeByUserIdAndPostIdAuth({userId:user.userId,postFor: postId},"statusResult")
+        await queryClient.resetQueries(["feed"])
+        return
     }
 
     const shareHandle = async (event,postId)=>{
@@ -35,10 +39,13 @@ const Post = ({post}) => {
             await addSharePostAuth({
                 postFor: postId,
                 sharedByUserId: user.userId
-              })
+              },"id")
+              await queryClient.resetQueries(["feed"])
               return
         }
-        await deleteSharePostByUserIdAndPostIdAuth({postFor: postId,sharedByUserId:user.userId})
+        await deleteSharePostByUserIdAndPostIdAuth({postFor: postId,sharedByUserId:user.userId},"statusResult")
+        await queryClient.resetQueries(["feed"])
+        return
     }
 
     const tagHandleClick = (e,tagName) =>{
@@ -94,6 +101,8 @@ const Post = ({post}) => {
     const navigateToUser = (userId) =>{
         navigate(`/user/${userId}`)
     }
+
+    const backedFileURL = backendType === BackendType.RestAPI ? "/rest/api/files" : "/graphql/api/files"
     
     const likeNumber = _computeLikeNumber()
     const shareNumber = _computeShareNumber()
@@ -103,7 +112,7 @@ const Post = ({post}) => {
   return (
     
     <div className='post-wrapper'  >
-        <img className='post-author-img' alt='img' src={`/rest/api/files/${post.createByUser.photo.replace('\\','/')}`} onClick={()=>navigateToUser(post.createByUser.id)} />
+        <img className='post-author-img' alt='img' src={`${backedFileURL}/${post.createByUser.photo.replace('\\','/')}`} onClick={()=>navigateToUser(post.createByUser.id)} />
         <div className='custom-post'>
             <div className='post-header'>
                 <span className='nick' onClick={()=>navigateToUser(post.createByUser.id)}>{post.createByUser.nick}</span>
@@ -113,7 +122,7 @@ const Post = ({post}) => {
             <div style={{cursor:'pointer'}} onClick={(e)=>postNavigateClick(e,post.id)}>
                 {memoContent}
                     <div style={{display:"flex",flexDirection:"row",justifyContent:"center"}}>
-                        {post?.multimediaDTO?.files.map((fsrc,idx) => <img key={idx} style={{width:`${90/post?.multimediaDTO?.files.length}%`,paddingTop:".5rem"}} loading={"lazy"} src={`/rest/api/files/${fsrc}`} alt="images"/>)}
+                        {post?.multimediaDTO?.files.map((fsrc,idx) => <img key={idx} style={{width:`${90/post?.multimediaDTO?.files.length}%`,paddingTop:".5rem"}} loading={"lazy"} src={`${backedFileURL}/${fsrc}`} alt="images"/>)}
                     </div>
             </div>
                 
