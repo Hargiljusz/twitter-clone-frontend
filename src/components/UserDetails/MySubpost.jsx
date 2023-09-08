@@ -23,7 +23,10 @@ const MySubpost = ({userId}) => {
                 isShared,
                 content,
                 likeNumber,
-                shareNumber
+                shareNumber,
+                multimediaDTO {
+                    files
+                  },
             },
             totalPageCount,
             pageNumber`)

@@ -98,7 +98,6 @@ const PostDetails = () => {
     }
 
     const deletePost= async()=>{
-        alert("Do you want to delete this post?")
         //delete post
         const result = await deletePostByIdAuth(data?.data?.id,"statusResult")
         //clear feed
@@ -124,7 +123,7 @@ const PostDetails = () => {
                     <span className='nick' onClick={()=>navigateToUser(data?.data?.createByUser.id)}>{data?.data?.createByUser.nick}</span>
                     <span className='userName' onClick={()=>navigateToUser(data?.data?.createByUser.id)}>@{data?.data?.createByUser.userName}</span>
                     <span className='date'>{formatDate(data?.data?.createdAt).join(" ")}</span>
-                    <MdDeleteOutline className="icon" style={{marginLeft:"auto", transform:"scale(0.9)"}}  onClick={()=>deletePost()}/>
+                    {postIsMine ? <MdDeleteOutline className="icon" style={{marginLeft:"auto", transform:"scale(0.9)"}}  onClick={()=>deletePost()}/>: null}
                 </div>
             <div>
                 {memoContent}

@@ -67,12 +67,12 @@ const UserDetails = ({userId}) => {
           </div> : null}
 
           <div>
-            <Link className='follows-link' to={`#`} key={1}>
+            <span className='follows-link' key={1}>
                <strong>{followerNumber?.count ?? followerNumber}</strong> Obserwowanych 
-            </Link>
-            <Link style={{marginLeft: "10rem"}} className='follows-link' to={`#`} key={2}>
+            </span>
+            <span style={{marginLeft: "10rem"}} className='follows-link' key={2}>
                <strong>{followingNumber?.count ?? followingNumber }</strong> Obserwujących 
-            </Link>
+            </span>
           </div>
         </div>
         <div style={{marginTop: '2rem'}}>

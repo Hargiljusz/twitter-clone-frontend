@@ -37,7 +37,8 @@ const Sidebar = () => {
 
         {userStatus.isLogged ?
         <Link to={routes.Home} onClick={()=>{
-
+           queryClient.removeQueries();
+           queryClient.removeQueries(["feed"]);
             queryClient.clear()
             logout()
           }}>

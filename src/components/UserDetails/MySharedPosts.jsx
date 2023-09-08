@@ -23,7 +23,10 @@ const MySharedPost = () => {
             isShared,
             content,
             likeNumber,
-            shareNumber
+            shareNumber,
+            multimediaDTO {
+                files
+              },
         },
         totalPageCount,
         pageNumber`)
