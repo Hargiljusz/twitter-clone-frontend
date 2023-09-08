@@ -16,7 +16,6 @@ const Post = ({post}) => {
     const { addSharePostAuth,deleteSharePostByUserIdAndPostIdAuth} = useSharePost()
     const likeActive = localIsLiked
     const shareActive =  localIsShared
-
     const navigate = useNavigate()
 
     const likeHandle = async (event,postId)=>{
@@ -24,11 +23,9 @@ const Post = ({post}) => {
         setLocalIsLiked(prev=>!prev)
         if(!likeActive){
            await addLikeAuth({userId:user.userId,postFor: postId},"id")
-           await queryClient.resetQueries(["feed"])
            return
         }
         await deleteLikeByUserIdAndPostIdAuth({userId:user.userId,postFor: postId},"statusResult")
-        await queryClient.resetQueries(["feed"])
         return
     }
 
@@ -40,11 +37,9 @@ const Post = ({post}) => {
                 postFor: postId,
                 sharedByUserId: user.userId
               },"id")
-              await queryClient.resetQueries(["feed"])
               return
         }
         await deleteSharePostByUserIdAndPostIdAuth({postFor: postId,sharedByUserId:user.userId},"statusResult")
-        await queryClient.resetQueries(["feed"])
         return
     }
 
